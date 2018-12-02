@@ -21,9 +21,11 @@ class NgramIterator implements Iterator<NgramStruct> {
         return pos < str.size() - n + 1;
     }
     public NgramStruct next() {
-        int posTo = pos++ + n;
+        int posTo = pos + n;
         String ngramString = str.subSequence(pos, posTo);
-        return new NgramStruct(ngramString, pos);
+        NgramStruct result = new NgramStruct(ngramString, pos);
+        pos++;
+        return result;
     }
 
     public void setPos(int pos) {

@@ -11,10 +11,11 @@ public class NGramSelector {
     private Sequence dataSetSequence;
     private NgramIterator searchedIter;
     private NgramIterator dataSetIter;
-    private Integer ngramLen = 2; // Количество элементов в ngram
+    private Integer ngramLen; // Количество элементов в ngram
 
-    public NGramSelector(Sequence searchedSequence, Sequence dataSetSequence) {
+    public NGramSelector(Sequence searchedSequence, Sequence dataSetSequence, Integer ngramLen) {
         this.dataSetSequence = dataSetSequence;
+        this.ngramLen = ngramLen;
         this.searchedIter = new NgramIterator(ngramLen, searchedSequence);
         this.dataSetIter = new NgramIterator(ngramLen, this.dataSetSequence);
     }
@@ -28,9 +29,9 @@ public class NGramSelector {
 
          while (searchedIter.hasNext()) {
              NgramStruct current = searchedIter.next();
-             NGram result = getNewNGram(current);
+             List<NGram> result = getNewNGram(current);
              if (result != null)
-                 ngrams.add(result);
+                 ngrams.addAll(result);
          }
 
          return ngrams;
@@ -42,19 +43,20 @@ public class NGramSelector {
      * Если searched или data последовательность закончена, возвращает null
      * @return новую ngram или null
      */
-    private NGram getNewNGram(NgramStruct searchedNgramSeq) {
+    private List<NGram> getNewNGram(NgramStruct searchedNgramSeq) {
         dataSetIter.setPos(0); // Для новой ngramm начинаем поиск с нуля
+        List<NGram> result = new ArrayList<>();
 
         while (dataSetIter.hasNext()) {
 
             NgramStruct dataNgramSeq = dataSetIter.next();
 
             if (searchedNgramSeq.getNgram().equals(dataNgramSeq.getNgram()))
-                return new NGram(ngramLen, searchedNgramSeq.getNgram(), searchedNgramSeq.getPos(), dataNgramSeq.getPos());
+                result.add(new NGram(ngramLen, searchedNgramSeq.getNgram(), searchedNgramSeq.getPos(), dataNgramSeq.getPos()));
 
         }
 
-        return null;
+        return result;
     }
 
     /**
@@ -85,7 +87,7 @@ public class NGramSelector {
     private int[] prefix(String s) {
         int n = s.length();
         int[] pi = new int[n];
-        Arrays.fill(pi, 1);
+        Arrays.fill(pi, 0);
 
         int j;
         for (int i = 1; i < n; i++) {
@@ -123,6 +125,7 @@ public class NGramSelector {
             }
             if (q == searchedNgram.length()) {
                 entries.add(k - searchedNgram.length() + 1);
+                q = 0;
             }
         }
 
