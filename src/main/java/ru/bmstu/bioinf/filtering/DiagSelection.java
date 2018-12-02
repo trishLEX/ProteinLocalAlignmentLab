@@ -9,6 +9,9 @@ import ru.bmstu.bioinf.sequence.Sequence;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Класс для получения максимальных путей по дот-мапе
+ */
 public class DiagSelection {
     private NGramSelector nGramSelector;
     private Sequence searchedSequence;
@@ -36,6 +39,9 @@ public class DiagSelection {
         this.endNodes = new ArrayList<>();
     }
 
+    /**
+     * @return отображение нчала пути в его конец
+     */
     public Map<Node, Node> getDiagonals() {
         List<NGramWord> diagNGrams = getDiagNGrams();
         if (diagNGrams.isEmpty()) {
