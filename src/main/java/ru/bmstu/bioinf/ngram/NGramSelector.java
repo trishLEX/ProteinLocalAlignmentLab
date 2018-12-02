@@ -115,7 +115,7 @@ public class NGramSelector {
 
         int q = 0;
 
-        for(int k = 0; k < dataSetSequence.size(); k++) {
+        for(int k = 0; k < dataSetSequence.length(); k++) {
             while (q > 0 && searchedNGram.charAt(q) != dataSetSequence.get(k)) {
                 q = pi[q - 1];
             }
