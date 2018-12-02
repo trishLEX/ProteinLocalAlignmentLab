@@ -1,4 +1,4 @@
-package ru.bmstu.bioinf;
+package ru.bmstu.bioinf.ngram;
 
 import org.junit.Assert;
 import org.junit.Test;

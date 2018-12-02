@@ -42,15 +42,15 @@ public class NGramSelector {
      * Если searched или data последовательность закончена, возвращает пустой список
      * @return список ngram или пустой список
      */
-    private List<NGram> getNewNGram(NGramStruct searchedNgramSeq) {
+    private List<NGram> getNewNGram(NGramStruct searchedNGramSeq) {
         dataSetIter.setPos(0); // Для новой ngramm начинаем поиск с нуля
         List<NGram> result = new ArrayList<>();
 
         while (dataSetIter.hasNext()) {
             NGramStruct dataNgramSeq = dataSetIter.next();
 
-            if (searchedNgramSeq.getnGram().equals(dataNgramSeq.getnGram())) {
-                result.add(new NGram(nGramLen, searchedNgramSeq.getnGram(), searchedNgramSeq.getPos(), dataNgramSeq.getPos()));
+            if (searchedNGramSeq.getnGram().equals(dataNgramSeq.getnGram())) {
+                result.add(new NGram(nGramLen, searchedNGramSeq.getnGram(), searchedNGramSeq.getPos(), dataNgramSeq.getPos()));
             }
         }
 

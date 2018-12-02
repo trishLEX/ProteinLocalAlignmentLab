@@ -12,16 +12,19 @@ public class NGram {
     private final int searchedSeqCoordinate;
     private final int dataSetSeqCoordinate;
     private NGramWord nGramWord;
+    private List<Node> nodeList;
 
     public NGram(int length, String string, int searchedSeqCoordinate, int dataSetSeqCoordinate) {
         this.length = length;
         this.string = string;
         this.searchedSeqCoordinate = searchedSeqCoordinate;
         this.dataSetSeqCoordinate = dataSetSeqCoordinate;
+
+        toNodeList();
     }
 
-    public List<Node> toNodeList() {
-        List<Node> nodeList = new ArrayList<>();
+    private void toNodeList() {
+        nodeList = new ArrayList<>();
 
         char charAtSeq = string.charAt(0);
 
@@ -52,7 +55,9 @@ public class NGram {
 
             nodeList.add(node);
         }
+    }
 
+    public List<Node> getNodeList() {
         return nodeList;
     }
 
