@@ -62,6 +62,6 @@ public class DiagSelectionTest {
 
         DiagSelection diagSelection = new DiagSelection(searchedSeq, dataSetSeq, -2, LENGTH, 0, 0, 2);
         Map<Node, Node> words = diagSelection.getDiagonals();
-        assertEquals(1, words.size());
+        assertEquals(2, words.size());
     }
 }
