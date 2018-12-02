@@ -22,7 +22,7 @@ public class DiagSelectionTest {
 
     @Before
     public void before() {
-        FineTable.getInstance(-2);
+        FineTable.getInstance(-2.0f);
     }
 
     @Test

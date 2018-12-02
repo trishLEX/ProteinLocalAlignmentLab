@@ -20,7 +20,7 @@ public class SWTest {
 
     @Before
     public void before() {
-        FineTable.getInstance(-2);
+        FineTable.getInstance(-2.0f);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class SWTest {
 
         for(Map.Entry<Node, Node> e : words.entrySet()) {
             SWAllignment a = new SWAllignment(searchedSeq, dataSetSeq,
-                    e.getKey(), e.getValue(), FineTable.getInstance(-2));
+                    e.getKey(), e.getValue(), FineTable.getInstance(-2.0f));
 
             System.out.println(a);
         }
@@ -49,7 +49,7 @@ public class SWTest {
 
         for(Map.Entry<Node, Node> e : words.entrySet()) {
             SWAllignment a = new SWAllignment(searchedSeq, dataSetSeq,
-                    e.getKey(), e.getValue(), FineTable.getInstance(-2));
+                    e.getKey(), e.getValue(), FineTable.getInstance(-2.0f));
 
             System.out.println(a);
         }
