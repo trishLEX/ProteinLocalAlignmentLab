@@ -15,9 +15,9 @@ public class Node {
     private char searchedSeqChar;
     private char dataSetSeqChar;
 
-    private int score;
+    private float score;
 
-    public Node(int searchedSeqCoordinate, int dataSetSeqCoordinate, char searchedSeqChar, char dataSetSeqChar, int score) {
+    public Node(int searchedSeqCoordinate, int dataSetSeqCoordinate, char searchedSeqChar, char dataSetSeqChar, float score) {
         this.searchedSeqCoordinate = searchedSeqCoordinate;
         this.dataSetSeqCoordinate = dataSetSeqCoordinate;
 
@@ -83,15 +83,15 @@ public class Node {
         return dataSetSeqChar;
     }
 
-    public int getScore() {
+    public float getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(float score) {
         this.score = score;
     }
 
-    public void updateScore(int delta) {
+    public void updateScore(float delta) {
         this.score += delta;
         for (Node child : children) {
             child.setScore(child.getScore() + delta);

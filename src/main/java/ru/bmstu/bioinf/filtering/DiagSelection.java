@@ -15,12 +15,13 @@ public class DiagSelection {
     private Sequence dataSetSequence;
     private FineTable fineTable;
     private List<Node> endNodes;
-    private int gap;
-    private int diagScore;
+    private float gap;
+    private float diagScore;
     private int minNGrams;
     private int radius;
+    private int nGramLen;
 
-    public DiagSelection(Sequence searchedSequence, Sequence dataSetSequence, int gap, int nGramLen, int diagScore, int minNGrams, int radius) {
+    public DiagSelection(Sequence searchedSequence, Sequence dataSetSequence, float gap, int nGramLen, float diagScore, int minNGrams, int radius) {
         this.nGramSelector = new NGramSelector(searchedSequence, dataSetSequence, nGramLen);
 
         this.searchedSequence = searchedSequence;
@@ -29,6 +30,7 @@ public class DiagSelection {
         this.diagScore = diagScore;
         this.minNGrams = minNGrams;
         this.radius = radius;
+        this.nGramLen = nGramLen;
 
         this.fineTable = FineTable.getInstance();
         this.endNodes = new ArrayList<>();
@@ -56,7 +58,7 @@ public class DiagSelection {
                 int diffSearchedSeqCoordinates = node.getSearchedSeqCoordinate() - child.getSearchedSeqCoordinate();
                 int diffDataSetSeqCoordinates = node.getDataSetSeqCoordinate() - child.getDataSetSeqCoordinate();
 
-                int score;
+                float score;
                 //если условие выполняется, то n-граммы лежат "впритык" друг к другу и образают 2n-грамму
                 if (diffSearchedSeqCoordinates == diffDataSetSeqCoordinates && diffSearchedSeqCoordinates == 1) {
                     score = node.getScore() + child.getScore();
@@ -126,7 +128,11 @@ public class DiagSelection {
                     for (Node toLinkNode : toLinkNodes) {
                         int diffSearchedSeqCoordinates = toLinkNode.getSearchedSeqCoordinate() - currentNode.getSearchedSeqCoordinate();
                         int diffDataSetSeqCoordinates = toLinkNode.getDataSetSeqCoordinate() - currentNode.getDataSetSeqCoordinate();
-                        if (Math.abs(diffSearchedSeqCoordinates + diffDataSetSeqCoordinates) <= radius) {
+                        if (
+                                diffSearchedSeqCoordinates >= 0 &&
+                                diffDataSetSeqCoordinates >= 0 &&
+                                Math.abs(diffSearchedSeqCoordinates + diffDataSetSeqCoordinates) <= radius
+                        ) {
                             currentNode.addChild(toLinkNode);
                             toLinkNode.addParent(currentNode);
                         }
@@ -144,7 +150,7 @@ public class DiagSelection {
             Node next = nodeIterator.next();
             int searchedDiff = cur.getSearchedSeqCoordinate() - next.getSearchedSeqCoordinate();
             int resultSetDiff = cur.getDataSetSeqCoordinate() - next.getDataSetSeqCoordinate();
-            if (Math.abs(searchedDiff + resultSetDiff) <= radius) {
+            if (Math.abs(searchedDiff + resultSetDiff) <= Math.max(radius, nGramLen)) {
                 cur.addChild(next);
                 next.addParent(cur);
             }
