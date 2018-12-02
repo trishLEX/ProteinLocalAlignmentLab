@@ -68,7 +68,7 @@ public class NGramSelector {
 
         while (searchedIter.hasNext()) {
             NgramStruct current = searchedIter.next();
-            ArrayList<Integer> indexes = KMPSubstr(current.getNgram());
+            List<Integer> indexes = KMPSubstr(current.getNgram());
             if (indexes == null)
                 continue;
 
@@ -84,7 +84,7 @@ public class NGramSelector {
      * Вспомогательный алгоритм для КМП
      * Выделяет префикс
      */
-    int[] prefix(String s) {
+    private int[] prefix(String s) {
         int n = s.length();
         int[] pi = new int[n];
         Arrays.fill(pi, 1);
@@ -109,8 +109,8 @@ public class NGramSelector {
      * @param searchedNgram последовательность, вхождение которой нужно найти
      * @return набор координат из dataSet, в которых входная последовательность существует
      */
-    ArrayList<Integer> KMPSubstr(String searchedNgram) {
-        ArrayList<Integer> entries = new ArrayList<>();
+    List<Integer> KMPSubstr(String searchedNgram) {
+        List<Integer> entries = new ArrayList<>();
 
         int[] pi = prefix(searchedNgram);
 
