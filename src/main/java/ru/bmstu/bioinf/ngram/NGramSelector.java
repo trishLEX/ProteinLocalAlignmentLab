@@ -8,16 +8,14 @@ import java.util.*;
  * Выделяет n-граммы
  */
 public class NGramSelector {
-    private Sequence searchedSequence;
     private Sequence dataSetSequence;
     private NgramIterator searchedIter;
     private NgramIterator dataSetIter;
     private Integer ngramLen = 2; // Количество элементов в ngram
 
     public NGramSelector(Sequence searchedSequence, Sequence dataSetSequence) {
-        this.searchedSequence = searchedSequence;
         this.dataSetSequence = dataSetSequence;
-        this.searchedIter = new NgramIterator(ngramLen, this.searchedSequence);
+        this.searchedIter = new NgramIterator(ngramLen, searchedSequence);
         this.dataSetIter = new NgramIterator(ngramLen, this.dataSetSequence);
     }
 
@@ -109,7 +107,7 @@ public class NGramSelector {
      * @param searchedNgram последовательность, вхождение которой нужно найти
      * @return набор координат из dataSet, в которых входная последовательность существует
      */
-    List<Integer> KMPSubstr(String searchedNgram) {
+    private List<Integer> KMPSubstr(String searchedNgram) {
         List<Integer> entries = new ArrayList<>();
 
         int[] pi = prefix(searchedNgram);
