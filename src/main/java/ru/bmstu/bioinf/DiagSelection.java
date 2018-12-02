@@ -17,7 +17,7 @@ public class DiagSelection {
     private int gap;
 
     public DiagSelection(Sequence searchedSequence, Sequence dataSetSequence, int gap) {
-        this.nGramSelector = new NGramSelector(searchedSequence, dataSetSequence);
+        this.nGramSelector = new NGramSelector(searchedSequence, dataSetSequence, 2 /* TODO: stub */);
 
         this.searchedSequence = searchedSequence;
         this.dataSetSequence = dataSetSequence;
