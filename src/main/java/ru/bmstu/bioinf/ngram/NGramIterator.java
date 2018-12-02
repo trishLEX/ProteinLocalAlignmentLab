@@ -19,12 +19,12 @@ public class NGramIterator implements Iterator<NGramStruct> {
     }
 
     public boolean hasNext() {
-        return pos < str.length() - n + 1;
+        return pos < str.size() - n + 1;
     }
 
     public NGramStruct next() {
         int posTo = pos + n;
-        String nGramString = str.substring(pos, posTo);
+        String nGramString = str.subSequence(pos, posTo);
         NGramStruct result = new NGramStruct(nGramString, pos);
         pos++;
         return result;
