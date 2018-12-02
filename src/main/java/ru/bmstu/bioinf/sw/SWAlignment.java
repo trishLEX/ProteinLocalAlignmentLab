@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SWAllignment {
+public class SWAlignment {
     private Sequence searched;
     private Sequence fromBase;
     private Map<Pair<Integer, Integer>, SWNode> matrix;
@@ -17,9 +17,8 @@ public class SWAllignment {
 
     private static final int borderAdd = 32;
 
-
-    public SWAllignment(Sequence searched, Sequence fromBase,
-                        Node routeStart, Node routeFinish, FineTable table) {
+    public SWAlignment(Sequence searched, Sequence fromBase,
+                       Node routeStart, Node routeFinish, FineTable table) {
         this.searched = searched;
         this.fromBase = fromBase;
         this.table = table;
@@ -97,6 +96,10 @@ public class SWAllignment {
 
     public Float getScore() {
         return maxNode.getScore();
+    }
+
+    public Sequence getFromBase() {
+        return fromBase;
     }
 
     @Override

@@ -28,6 +28,10 @@ public class Sequence {
         return sequence.charAt(i);
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "name: " + name + "\n" + "sequence: " + sequence;

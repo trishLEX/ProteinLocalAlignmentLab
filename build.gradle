@@ -11,6 +11,13 @@ repositories {
     mavenCentral()
 }
 
+jar {
+        manifest {
+                attributes 'Main-Class': 'ru.bmstu.bioinf.Main'
+            }
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
 dependencies {
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'

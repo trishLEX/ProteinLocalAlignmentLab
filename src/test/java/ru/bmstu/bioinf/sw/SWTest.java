@@ -1,13 +1,10 @@
 package ru.bmstu.bioinf.sw;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ru.bmstu.bioinf.FineTable;
 import ru.bmstu.bioinf.filtering.DiagSelection;
 import ru.bmstu.bioinf.filtering.Node;
-import ru.bmstu.bioinf.ngram.NGram;
-import ru.bmstu.bioinf.ngram.NGramSelector;
 import ru.bmstu.bioinf.sequence.Sequence;
 
 import java.util.Map;
@@ -32,7 +29,7 @@ public class SWTest {
         Map<Node, Node> words = diagSelection.getDiagonals();
 
         for(Map.Entry<Node, Node> e : words.entrySet()) {
-            SWAllignment a = new SWAllignment(searchedSeq, dataSetSeq,
+            SWAlignment a = new SWAlignment(searchedSeq, dataSetSeq,
                     e.getKey(), e.getValue(), FineTable.getInstance(-2.0f));
 
             System.out.println(a);
@@ -48,7 +45,7 @@ public class SWTest {
         Map<Node, Node> words = diagSelection.getDiagonals();
 
         for(Map.Entry<Node, Node> e : words.entrySet()) {
-            SWAllignment a = new SWAllignment(searchedSeq, dataSetSeq,
+            SWAlignment a = new SWAlignment(searchedSeq, dataSetSeq,
                     e.getKey(), e.getValue(), FineTable.getInstance(-2.0f));
 
             System.out.println(a);

@@ -40,7 +40,7 @@ public class DiagSelection {
     }
 
     /**
-     * @return отображение нчала пути в его конец
+     * @return отображение начала пути в его конец
      */
     public Map<Node, Node> getDiagonals() {
         List<NGramWord> diagNGrams = getDiagNGrams();
