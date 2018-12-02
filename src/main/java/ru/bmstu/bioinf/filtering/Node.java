@@ -1,4 +1,4 @@
-package ru.bmstu.bioinf;
+package ru.bmstu.bioinf.filtering;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +73,14 @@ public class Node {
 
     public Node getMaxChild() {
         return maxChild;
+    }
+
+    public char getSearchedSeqChar() {
+        return searchedSeqChar;
+    }
+
+    public char getDataSetSeqChar() {
+        return dataSetSeqChar;
     }
 
     public int getScore() {

@@ -8,7 +8,7 @@ import java.util.Iterator;
  * Итератор, позволяющий получить структуру, содержащую n-грамму
  * и её координату в общей строке
  */
-class NGramIterator implements Iterator<NGramStruct> {
+public class NGramIterator implements Iterator<NGramStruct> {
     private final Sequence str;
     private final int n;
     private int pos = 0;
@@ -17,6 +17,7 @@ class NGramIterator implements Iterator<NGramStruct> {
         this.n = n;
         this.str = str;
     }
+
     public boolean hasNext() {
         return pos < str.size() - n + 1;
     }

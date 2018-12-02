@@ -1,7 +1,7 @@
 package ru.bmstu.bioinf.ngram;
 
 import ru.bmstu.bioinf.FineTable;
-import ru.bmstu.bioinf.Node;
+import ru.bmstu.bioinf.filtering.Node;
 
 import java.util.ArrayList;
 import java.util.List;

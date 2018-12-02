@@ -11,9 +11,9 @@ public class NGramSelector {
     private Sequence dataSetSequence;
     private NGramIterator searchedIter;
     private NGramIterator dataSetIter;
-    private Integer nGramLen; // Количество элементов в ngram
+    private int nGramLen; // Количество элементов в ngram
 
-    public NGramSelector(Sequence searchedSequence, Sequence dataSetSequence, Integer nGramLen) {
+    public NGramSelector(Sequence searchedSequence, Sequence dataSetSequence, int nGramLen) {
         this.dataSetSequence = dataSetSequence;
         this.nGramLen = nGramLen;
         this.searchedIter = new NGramIterator(nGramLen, searchedSequence);
@@ -25,15 +25,15 @@ public class NGramSelector {
      * @return набор ngram для заданной searchedSequence
      */
     public List<NGram> getNewNGramsByIterator() {
-         List<NGram> ngrams = new ArrayList<>();
+         List<NGram> nGrams = new ArrayList<>();
 
          while (searchedIter.hasNext()) {
              NGramStruct current = searchedIter.next();
              List<NGram> result = getNewNGram(current);
-             ngrams.addAll(result);
+             nGrams.addAll(result);
          }
 
-         return ngrams;
+         return nGrams;
     }
 
     /**
@@ -49,8 +49,8 @@ public class NGramSelector {
         while (dataSetIter.hasNext()) {
             NGramStruct dataNgramSeq = dataSetIter.next();
 
-            if (searchedNgramSeq.getNgram().equals(dataNgramSeq.getNgram())) {
-                result.add(new NGram(nGramLen, searchedNgramSeq.getNgram(), searchedNgramSeq.getPos(), dataNgramSeq.getPos()));
+            if (searchedNgramSeq.getnGram().equals(dataNgramSeq.getnGram())) {
+                result.add(new NGram(nGramLen, searchedNgramSeq.getnGram(), searchedNgramSeq.getPos(), dataNgramSeq.getPos()));
             }
         }
 
@@ -58,21 +58,21 @@ public class NGramSelector {
     }
 
     /**
-     * Выделяет набор ngram внутри dataSetSequence с помощью алгоритма КМП
-     * @return набор ngram для заданной searchedSequence
+     * Выделяет набор {@link NGram} внутри dataSetSequence с помощью алгоритма КМП
+     * @return набор {@link NGram} для заданной searchedSequence
      */
     public List<NGram> getNewNGrams() {
         List<NGram> ngrams = new ArrayList<>();
 
         while (searchedIter.hasNext()) {
             NGramStruct current = searchedIter.next();
-            List<Integer> indices = KMPSubstr(current.getNgram());
+            List<Integer> indices = KMPSubstr(current.getnGram());
             if (indices == null) {
                 continue;
             }
 
             for (Integer index : indices) {
-                ngrams.add(new NGram(nGramLen, current.getNgram(), current.getPos(), index));
+                ngrams.add(new NGram(nGramLen, current.getnGram(), current.getPos(), index));
             }
         }
 

@@ -1,5 +1,6 @@
-package ru.bmstu.bioinf;
+package ru.bmstu.bioinf.filtering;
 
+import ru.bmstu.bioinf.FineTable;
 import ru.bmstu.bioinf.ngram.NGram;
 import ru.bmstu.bioinf.ngram.NGramSelector;
 import ru.bmstu.bioinf.ngram.NGramWord;
