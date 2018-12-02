@@ -1,6 +1,5 @@
 package ru.bmstu.bioinf.sw;
 
-import javafx.util.Pair;
 import ru.bmstu.bioinf.FineTable;
 import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
@@ -36,38 +35,38 @@ public class SWAllignment {
 
     private void computeMatrix(int top, int bottom, int left, int right) {
         matrix = new LinkedHashMap<>();
-        maxNode = new SWNode(0,0, 0.0f, SWNode.getZeroNode());
+        maxNode = new SWNode(0,0, 0.0f, SWNode.zero);
 
-        int searchStartCoord = Integer.max((left - top) / 2, 0);
-        int searchUntilCoord = Integer.min((right - bottom) / 2 + 1, searched.length());
+        int searchStartCoord = Math.max((left - top) / 2, 0);
+        int searchUntilCoord = Math.min((right - bottom) / 2 + 1, searched.length());
 
         for(int i = searchStartCoord; i < searchUntilCoord; ++i) {
-            int start = Integer.max(
-                    Integer.max(left - i, bottom + i),
+            int start = Math.max(
+                    Math.max(left - i, bottom + i),
                     0);
-            int until = Integer.min(
-                    Integer.min(right - i + 1, top + i + 1),
+            int until = Math.min(
+                    Math.min(right - i + 1, top + i + 1),
                     fromBase.length());
-            for(Integer j = start; j < until; ++j) {
+            for(int j = start; j < until; ++j) {
                 SWNode nodeij = SWNode.max(
-                        SWNode.getZeroNode(),
+                        SWNode.zero,
                         new SWNode(i, j, table.getE(),
                                 matrix.getOrDefault(
                                         new Pair<>(i - 1, j),
                                         new SWNode(
-                                                i - 1, j, (float) 0, SWNode.getZeroNode()))
+                                                i - 1, j, 0.0f, SWNode.zero))
                         ),
                         new SWNode(i, j, table.getE(),
                                 matrix.getOrDefault(
                                         new Pair<>(i, j - 1),
                                         new SWNode(
-                                                i, j - 1, (float) 0, SWNode.getZeroNode()))
+                                                i, j - 1, 0.0f, SWNode.zero))
                         ),
                         new SWNode(i, j, (float) table.get(searched.get(i), fromBase.get(j)),
                                 matrix.getOrDefault(
                                         new Pair<>(i - 1, j - 1),
                                         new SWNode(
-                                                i - 1, j - 1, (float) 0, SWNode.getZeroNode()))
+                                                i - 1, j - 1, 0.0f, SWNode.zero))
                         ));
                 maxNode = SWNode.max(maxNode, nodeij);
 
@@ -82,17 +81,17 @@ public class SWAllignment {
         int topDiag =
                 routeFinish.getDataSetSeqCoordinate() - routeFinish.getSearchedSeqCoordinate();
         int bottomDiag = topDiag;
-        while(curNode != routeStart) {
+        while(!curNode.equals(routeStart)) {
             curNode = curNode.getMaxParent();
             int candidate =
                     curNode.getDataSetSeqCoordinate() - curNode.getSearchedSeqCoordinate();
-            topDiag = Integer.max(topDiag, candidate);
-            bottomDiag = Integer.min(bottomDiag, candidate);
+            topDiag = Math.max(topDiag, candidate);
+            bottomDiag = Math.min(bottomDiag, candidate);
         }
 
         return new Pair<>(
-                Integer.min(topDiag + borderAdd, fromBase.length() - 1),
-                Integer.max(bottomDiag - borderAdd, 1 - searched.length())
+                Math.min(topDiag + borderAdd, fromBase.length() - 1),
+                Math.max(bottomDiag - borderAdd, 1 - searched.length())
         );
     }
 
@@ -144,13 +143,10 @@ public class SWAllignment {
         String newSearched = sbSearched.toString();
         String newBase = sbBase.toString();
 
-        System.out.println(newSearched.length());
-        System.out.println(newBase.length());
-
         StringBuilder resulting = new StringBuilder();
-        int nexti = 0;
+        int nexti;
         for(int i = 0; i < newBase.length(); i = nexti) {
-            nexti = Integer.min(i + 70, newBase.length());
+            nexti = Math.min(i + 70, newBase.length());
             resulting.append("searched: ");
             resulting.append(newSearched.substring(i, nexti));
             resulting.append("\n");
@@ -159,56 +155,5 @@ public class SWAllignment {
             resulting.append("\n");
         }
         return resulting.toString();
-    }
-}
-
-class SWNode {
-    public int getSearchedCoord() {
-        return searchedCoord;
-    }
-
-    public int getBaseCoord() {
-        return baseCoord;
-    }
-
-    private int searchedCoord;
-    private int baseCoord;
-    private SWNode parent;
-    private Float score;
-    private static SWNode zero = null;
-
-    public SWNode(int searchedCoord, int baseCoord, float addition, SWNode parent) {
-        this.searchedCoord = searchedCoord;
-        this.baseCoord = baseCoord;
-        this.parent = parent;
-        this.score = (parent == null) ? addition : parent.getScore() + addition;
-    }
-
-    public Pair<Integer, Integer> getCoords() {
-        return new Pair<>(searchedCoord, baseCoord);
-    }
-
-    public SWNode getParent() {
-        return parent;
-    }
-
-    public float getScore() {
-        return score;
-    }
-
-    public static SWNode max(SWNode first, SWNode... other) {
-        for(SWNode cur : other) {
-            if(Float.compare(cur.getScore(), first.getScore()) > 0) {
-                first = cur;
-            }
-        }
-        return first;
-    }
-
-    public static SWNode getZeroNode() {
-        if(zero == null) {
-            zero = new SWNode(-1,-1, 0.0f, null);
-        }
-        return zero;
     }
 }

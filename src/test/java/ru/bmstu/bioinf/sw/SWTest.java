@@ -10,7 +10,6 @@ import ru.bmstu.bioinf.ngram.NGram;
 import ru.bmstu.bioinf.ngram.NGramSelector;
 import ru.bmstu.bioinf.sequence.Sequence;
 
-import java.util.List;
 import java.util.Map;
 
 public class SWTest {
