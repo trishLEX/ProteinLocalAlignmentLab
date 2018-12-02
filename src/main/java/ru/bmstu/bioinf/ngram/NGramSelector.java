@@ -9,15 +9,15 @@ import java.util.*;
  */
 public class NGramSelector {
     private Sequence dataSetSequence;
-    private NgramIterator searchedIter;
-    private NgramIterator dataSetIter;
-    private Integer ngramLen; // Количество элементов в ngram
+    private NGramIterator searchedIter;
+    private NGramIterator dataSetIter;
+    private Integer nGramLen; // Количество элементов в ngram
 
-    public NGramSelector(Sequence searchedSequence, Sequence dataSetSequence, Integer ngramLen) {
+    public NGramSelector(Sequence searchedSequence, Sequence dataSetSequence, Integer nGramLen) {
         this.dataSetSequence = dataSetSequence;
-        this.ngramLen = ngramLen;
-        this.searchedIter = new NgramIterator(ngramLen, searchedSequence);
-        this.dataSetIter = new NgramIterator(ngramLen, this.dataSetSequence);
+        this.nGramLen = nGramLen;
+        this.searchedIter = new NGramIterator(nGramLen, searchedSequence);
+        this.dataSetIter = new NGramIterator(nGramLen, this.dataSetSequence);
     }
 
     /**
@@ -28,7 +28,7 @@ public class NGramSelector {
          List<NGram> ngrams = new ArrayList<>();
 
          while (searchedIter.hasNext()) {
-             NgramStruct current = searchedIter.next();
+             NGramStruct current = searchedIter.next();
              List<NGram> result = getNewNGram(current);
              ngrams.addAll(result);
          }
@@ -42,17 +42,16 @@ public class NGramSelector {
      * Если searched или data последовательность закончена, возвращает пустой список
      * @return список ngram или пустой список
      */
-    private List<NGram> getNewNGram(NgramStruct searchedNgramSeq) {
+    private List<NGram> getNewNGram(NGramStruct searchedNgramSeq) {
         dataSetIter.setPos(0); // Для новой ngramm начинаем поиск с нуля
         List<NGram> result = new ArrayList<>();
 
         while (dataSetIter.hasNext()) {
+            NGramStruct dataNgramSeq = dataSetIter.next();
 
-            NgramStruct dataNgramSeq = dataSetIter.next();
-
-            if (searchedNgramSeq.getNgram().equals(dataNgramSeq.getNgram()))
-                result.add(new NGram(ngramLen, searchedNgramSeq.getNgram(), searchedNgramSeq.getPos(), dataNgramSeq.getPos()));
-
+            if (searchedNgramSeq.getNgram().equals(dataNgramSeq.getNgram())) {
+                result.add(new NGram(nGramLen, searchedNgramSeq.getNgram(), searchedNgramSeq.getPos(), dataNgramSeq.getPos()));
+            }
         }
 
         return result;
@@ -66,13 +65,14 @@ public class NGramSelector {
         List<NGram> ngrams = new ArrayList<>();
 
         while (searchedIter.hasNext()) {
-            NgramStruct current = searchedIter.next();
-            List<Integer> indexes = KMPSubstr(current.getNgram());
-            if (indexes == null)
+            NGramStruct current = searchedIter.next();
+            List<Integer> indices = KMPSubstr(current.getNgram());
+            if (indices == null) {
                 continue;
+            }
 
-            for (int i = 0; i < indexes.size(); i++) {
-                ngrams.add(new NGram(ngramLen, current.getNgram(), current.getPos(), indexes.get(i)));
+            for (Integer index : indices) {
+                ngrams.add(new NGram(nGramLen, current.getNgram(), current.getPos(), index));
             }
         }
 
@@ -105,25 +105,25 @@ public class NGramSelector {
 
     /**
      * Алгоритм Кнута-Морриса-Пратта
-     * @param searchedNgram последовательность, вхождение которой нужно найти
+     * @param searchedNGram последовательность, вхождение которой нужно найти
      * @return набор координат из dataSet, в которых входная последовательность существует
      */
-    private List<Integer> KMPSubstr(String searchedNgram) {
+    private List<Integer> KMPSubstr(String searchedNGram) {
         List<Integer> entries = new ArrayList<>();
 
-        int[] pi = prefix(searchedNgram);
+        int[] pi = prefix(searchedNGram);
 
         int q = 0;
 
         for(int k = 0; k < dataSetSequence.size(); k++) {
-            while (q > 0 && searchedNgram.charAt(q) != dataSetSequence.get(k)) {
+            while (q > 0 && searchedNGram.charAt(q) != dataSetSequence.get(k)) {
                 q = pi[q - 1];
             }
-            if (searchedNgram.charAt(q) == dataSetSequence.get(k)) {
+            if (searchedNGram.charAt(q) == dataSetSequence.get(k)) {
                 q++;
             }
-            if (q == searchedNgram.length()) {
-                entries.add(k - searchedNgram.length() + 1);
+            if (q == searchedNGram.length()) {
+                entries.add(k - searchedNGram.length() + 1);
                 q = 0;
             }
         }

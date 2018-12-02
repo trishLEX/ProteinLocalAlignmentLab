@@ -3,11 +3,11 @@ package ru.bmstu.bioinf.ngram;
 /**
  * Класс-структура, хранящая n-грамму и координату её начала
  */
-public class NgramStruct {
+public class NGramStruct {
     private String ngram;
     private int pos;
 
-    public NgramStruct(String ngram, int pos) {
+    public NGramStruct(String ngram, int pos) {
         this.ngram = ngram;
         this.pos = pos;
     }
