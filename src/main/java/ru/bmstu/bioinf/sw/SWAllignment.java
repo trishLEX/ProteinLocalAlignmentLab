@@ -3,13 +3,15 @@ package ru.bmstu.bioinf.sw;
 import javafx.util.Pair;
 import ru.bmstu.bioinf.FineTable;
 import ru.bmstu.bioinf.filtering.Node;
+import ru.bmstu.bioinf.sequence.Sequence;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SWAllignment {
-    private String searched;
-    private String fromBase;
+    private Sequence searched;
+    private Sequence fromBase;
     private Map<Pair<Integer, Integer>, SWNode> matrix;
     private FineTable table;
     private SWNode maxNode;
@@ -17,7 +19,7 @@ public class SWAllignment {
     private static final int borderAdd = 32;
 
 
-    public SWAllignment(String searched, String fromBase,
+    public SWAllignment(Sequence searched, Sequence fromBase,
                         Node routeStart, Node routeFinish, FineTable table) {
         this.searched = searched;
         this.fromBase = fromBase;
@@ -61,7 +63,7 @@ public class SWAllignment {
                                         new SWNode(
                                                 i, j - 1, (float) 0, SWNode.getZeroNode()))
                         ),
-                        new SWNode(i, j, (float) table.get(searched.charAt(i), fromBase.charAt(j)),
+                        new SWNode(i, j, (float) table.get(searched.get(i), fromBase.get(j)),
                                 matrix.getOrDefault(
                                         new Pair<>(i - 1, j - 1),
                                         new SWNode(
@@ -111,12 +113,12 @@ public class SWAllignment {
         while(Float.compare(curNode.getScore(), 0.0f) != 0) {
             parent = curNode.getParent();
             if(curNode.getSearchedCoord() - parent.getBaseCoord() > 0) {
-                sbBase.insert(0, fromBase.charAt(curNode.getBaseCoord()));
+                sbBase.insert(0, fromBase.get(curNode.getBaseCoord()));
             } else {
                 sbBase.insert(0, "-");
             }
             if(curNode.getBaseCoord() - parent.getBaseCoord() > 0) {
-                sbSearched.insert(0, searched.charAt(curNode.getSearchedCoord()));
+                sbSearched.insert(0, searched.get(curNode.getSearchedCoord()));
             } else {
                 sbSearched.insert(0, "-");
             }
@@ -137,10 +139,13 @@ public class SWAllignment {
                         Collections.nCopies(curNode.getSearchedCoord() + 1, "-")));
         sbBase.append(
                 String.join("",
-                        Collections.nCopies(searched.length() - maxNode.getBaseCoord() - 1,"-")));
+                        Collections.nCopies(searched.length() - maxNode.getSearchedCoord() - 1,"-")));
 
         String newSearched = sbSearched.toString();
         String newBase = sbBase.toString();
+
+        System.out.println(newSearched.length());
+        System.out.println(newBase.length());
 
         StringBuilder resulting = new StringBuilder();
         int nexti = 0;
