@@ -101,7 +101,7 @@ public class SWAllignment {
 
     @Override
     public String toString() {
-        return String.format("%sScore: %f",getAllignment(), getScore());
+        return String.format("%sScore: %f", getAllignment(), getScore());
     }
 
     private String getAllignment() {

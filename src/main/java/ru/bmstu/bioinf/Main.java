@@ -2,8 +2,12 @@ package ru.bmstu.bioinf;
 
 import org.apache.commons.cli.*;
 import ru.bmstu.bioinf.filtering.DiagSelection;
+import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
 import ru.bmstu.bioinf.sequence.SequenceReader;
+import ru.bmstu.bioinf.sw.SWAllignment;
+
+import java.util.Map;
 
 public class Main {
     private static final int GAP_DEFAULT = -2;
@@ -62,7 +66,10 @@ public class Main {
             while (dataSetReader.hasNext()) {
                 Sequence dataSetSequence = dataSetReader.next();
                 DiagSelection selection = new DiagSelection(searchedSequence, dataSetSequence, gap, nGramLen, diagScore, nGramsCount, radius);
-                //TODO
+                for (Map.Entry<Node, Node> entry : selection.getDiagonals().entrySet()) {
+                    SWAllignment alignment = new SWAllignment(searchedSequence, dataSetSequence, entry.getKey(), entry.getValue(), FineTable.getInstance(gap));
+                    System.out.println(alignment);
+                }
             }
 
         } catch (ParseException e) {
