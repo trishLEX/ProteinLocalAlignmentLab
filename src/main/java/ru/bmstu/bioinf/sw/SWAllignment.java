@@ -111,12 +111,12 @@ public class SWAllignment {
         SWNode parent;
         while(Float.compare(curNode.getScore(), 0.0f) != 0) {
             parent = curNode.getParent();
-            if(curNode.getSearchedCoord() - parent.getBaseCoord() > 0) {
+            if(curNode.getBaseCoord() - parent.getBaseCoord() > 0) {
                 sbBase.insert(0, fromBase.get(curNode.getBaseCoord()));
             } else {
                 sbBase.insert(0, "-");
             }
-            if(curNode.getBaseCoord() - parent.getBaseCoord() > 0) {
+            if(curNode.getSearchedCoord() - parent.getSearchedCoord() > 0) {
                 sbSearched.insert(0, searched.get(curNode.getSearchedCoord()));
             } else {
                 sbSearched.insert(0, "-");
