@@ -1,5 +1,6 @@
-package ru.bmstu.bioinf;
+package ru.bmstu.bioinf.filtering;
 
+import ru.bmstu.bioinf.FineTable;
 import ru.bmstu.bioinf.ngram.NGram;
 import ru.bmstu.bioinf.ngram.NGramSelector;
 import ru.bmstu.bioinf.ngram.NGramWord;
@@ -8,33 +9,46 @@ import ru.bmstu.bioinf.sequence.Sequence;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Класс для получения максимальных путей по дот-мапе
+ */
 public class DiagSelection {
     private NGramSelector nGramSelector;
     private Sequence searchedSequence;
     private Sequence dataSetSequence;
     private FineTable fineTable;
     private List<Node> endNodes;
-    private int gap;
+    private float gap;
+    private float diagScore;
+    private int minNGrams;
+    private int radius;
+    private int nGramLen;
 
-    public DiagSelection(Sequence searchedSequence, Sequence dataSetSequence, int gap) {
-        this.nGramSelector = new NGramSelector(searchedSequence, dataSetSequence, 2 /* TODO: stub */);
+    public DiagSelection(Sequence searchedSequence, Sequence dataSetSequence, float gap, int nGramLen, float diagScore, int minNGrams, int radius) {
+        this.nGramSelector = new NGramSelector(searchedSequence, dataSetSequence, nGramLen);
 
         this.searchedSequence = searchedSequence;
         this.dataSetSequence = dataSetSequence;
         this.gap = gap;
+        this.diagScore = diagScore;
+        this.minNGrams = minNGrams;
+        this.radius = radius;
+        this.nGramLen = nGramLen;
 
         this.fineTable = FineTable.getInstance();
         this.endNodes = new ArrayList<>();
     }
 
+    /**
+     * @return отображение нчала пути в его конец
+     */
     public Map<Node, Node> getDiagonals() {
         List<NGramWord> diagNGrams = getDiagNGrams();
         if (diagNGrams.isEmpty()) {
             return null;
         }
 
-        //TODO 60 должно подаваться на вход
-        diagNGrams = diagNGrams.stream().filter(word -> getDiagScore(word) > 60).collect(Collectors.toList());
+        diagNGrams = diagNGrams.stream().filter(word -> getDiagScore(word) > diagScore).collect(Collectors.toList());
         if (diagNGrams.isEmpty()) {
             return null;
         }
@@ -50,7 +64,7 @@ public class DiagSelection {
                 int diffSearchedSeqCoordinates = node.getSearchedSeqCoordinate() - child.getSearchedSeqCoordinate();
                 int diffDataSetSeqCoordinates = node.getDataSetSeqCoordinate() - child.getDataSetSeqCoordinate();
 
-                int score;
+                float score;
                 //если условие выполняется, то n-граммы лежат "впритык" друг к другу и образают 2n-грамму
                 if (diffSearchedSeqCoordinates == diffDataSetSeqCoordinates && diffSearchedSeqCoordinates == 1) {
                     score = node.getScore() + child.getScore();
@@ -78,7 +92,7 @@ public class DiagSelection {
         List<Node> startNodes = new ArrayList<>();
         for (NGramWord word : diagNGrams) {
             for (Node node : word.getNodes()) {
-                if (node.hasParent()) {
+                if (!node.hasParent()) {
                     startNodes.add(node);
                 }
             }
@@ -104,26 +118,50 @@ public class DiagSelection {
     }
 
     private void linkNodes(List<NGramWord> diagNGrams) {
+        if (diagNGrams.size() == 1) {
+            linkNodes(diagNGrams.get(0));
+        }
+
         for (int i = 0; i < diagNGrams.size() - 1; i++) {
             for (int j = i + 1; j < diagNGrams.size(); j++) {
-                List<Node> currentNodes = diagNGrams.get(i).getNodes();
-                List<Node> toLinkNodes = diagNGrams.get(j).getNodes();
+                linkNodes(diagNGrams.get(i));
+                linkNodes(diagNGrams.get(j));
+
+                Set<Node> currentNodes = diagNGrams.get(i).getNodes();
+                Set<Node> toLinkNodes = diagNGrams.get(j).getNodes();
 
                 for (Node currentNode : currentNodes) {
                     for (Node toLinkNode : toLinkNodes) {
                         int diffSearchedSeqCoordinates = toLinkNode.getSearchedSeqCoordinate() - currentNode.getSearchedSeqCoordinate();
                         int diffDataSetSeqCoordinates = toLinkNode.getDataSetSeqCoordinate() - currentNode.getDataSetSeqCoordinate();
-                        if (diffSearchedSeqCoordinates >= 0 &&
+                        if (
+                                diffSearchedSeqCoordinates >= 0 &&
                                 diffDataSetSeqCoordinates >= 0 &&
-                                //TODO 5 должно подаваться на вход
-                                diffSearchedSeqCoordinates + diffDataSetSeqCoordinates <= 5
-                                ) {
+                                Math.abs(diffSearchedSeqCoordinates + diffDataSetSeqCoordinates) <= radius
+                        ) {
                             currentNode.addChild(toLinkNode);
                             toLinkNode.addParent(currentNode);
                         }
                     }
                 }
             }
+        }
+    }
+
+    private void linkNodes(NGramWord word) {
+        Iterator<Node> nodeIterator = word.getNodes().iterator();
+        Node cur = nodeIterator.next();
+
+        while (nodeIterator.hasNext()) {
+            Node next = nodeIterator.next();
+            int searchedDiff = cur.getSearchedSeqCoordinate() - next.getSearchedSeqCoordinate();
+            int resultSetDiff = cur.getDataSetSeqCoordinate() - next.getDataSetSeqCoordinate();
+            if (Math.abs(searchedDiff + resultSetDiff) <= Math.max(radius, nGramLen)) {
+                cur.addChild(next);
+                next.addParent(cur);
+            }
+
+            cur = next;
         }
     }
 
@@ -155,10 +193,9 @@ public class DiagSelection {
             }
         }
 
-        //TODO 10 должно подаваться на вход
         return words
                 .stream()
-                .filter(word -> word.size() > 10)
+                .filter(word -> word.size() > minNGrams)
                 .limit(10)
                 .collect(Collectors.toList());
     }
@@ -179,8 +216,8 @@ public class DiagSelection {
 
         while (searchedStart < searchedSequence.size() && dataSetStart < dataSetSequence.size()) {
             diagScore += fineTable.get(searchedSequence.get(searchedStart), dataSetSequence.get(dataSetStart));
-            i++;
-            j++;
+            searchedStart++;
+            dataSetStart++;
         }
 
         return diagScore;

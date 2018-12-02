@@ -8,22 +8,24 @@ import java.util.Iterator;
  * Итератор, позволяющий получить структуру, содержащую n-грамму
  * и её координату в общей строке
  */
-class NgramIterator implements Iterator<NgramStruct> {
+public class NGramIterator implements Iterator<NGramStruct> {
     private final Sequence str;
     private final int n;
-    int pos = 0;
+    private int pos = 0;
 
-    public NgramIterator(int n, Sequence str) {
+    public NGramIterator(int n, Sequence str) {
         this.n = n;
         this.str = str;
     }
+
     public boolean hasNext() {
         return pos < str.size() - n + 1;
     }
-    public NgramStruct next() {
+
+    public NGramStruct next() {
         int posTo = pos + n;
-        String ngramString = str.subSequence(pos, posTo);
-        NgramStruct result = new NgramStruct(ngramString, pos);
+        String nGramString = str.subSequence(pos, posTo);
+        NGramStruct result = new NGramStruct(nGramString, pos);
         pos++;
         return result;
     }

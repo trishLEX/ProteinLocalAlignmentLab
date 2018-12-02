@@ -1,11 +1,10 @@
-package ru.bmstu.bioinf;
+package ru.bmstu.bioinf.filtering;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Node {
-    private List<Node> parents;
-    private List<Node> children;
+    private Set<Node> parents;
+    private Set<Node> children;
 
     private Node maxParent;
     private Node maxChild;
@@ -16,9 +15,9 @@ public class Node {
     private char searchedSeqChar;
     private char dataSetSeqChar;
 
-    private int score;
+    private float score;
 
-    public Node(int searchedSeqCoordinate, int dataSetSeqCoordinate, char searchedSeqChar, char dataSetSeqChar, int score) {
+    public Node(int searchedSeqCoordinate, int dataSetSeqCoordinate, char searchedSeqChar, char dataSetSeqChar, float score) {
         this.searchedSeqCoordinate = searchedSeqCoordinate;
         this.dataSetSeqCoordinate = dataSetSeqCoordinate;
 
@@ -27,8 +26,8 @@ public class Node {
 
         this.score = score;
 
-        this.children = new ArrayList<>();
-        this.parents = new ArrayList<>();
+        this.children = new LinkedHashSet<>();
+        this.parents = new LinkedHashSet<>();
     }
 
     public int getSearchedSeqCoordinate() {
@@ -44,6 +43,7 @@ public class Node {
     }
 
     public void addChild(Node child) {
+        children.remove(child);
         children.add(child);
     }
 
@@ -55,7 +55,7 @@ public class Node {
         return !children.isEmpty();
     }
 
-    public List<Node> getChildren() {
+    public Set<Node> getChildren() {
         return children;
     }
 
@@ -75,15 +75,23 @@ public class Node {
         return maxChild;
     }
 
-    public int getScore() {
+    public char getSearchedSeqChar() {
+        return searchedSeqChar;
+    }
+
+    public char getDataSetSeqChar() {
+        return dataSetSeqChar;
+    }
+
+    public float getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(float score) {
         this.score = score;
     }
 
-    public void updateScore(int delta) {
+    public void updateScore(float delta) {
         this.score += delta;
         for (Node child : children) {
             child.setScore(child.getScore() + delta);
@@ -97,5 +105,29 @@ public class Node {
         } else {
             return maxParent.getStart();
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Node other = (Node) obj;
+        return this.searchedSeqCoordinate == other.searchedSeqCoordinate && this.dataSetSeqCoordinate == other.dataSetSeqCoordinate;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(searchedSeqCoordinate, dataSetSeqCoordinate);
+    }
+
+    @Override
+    public String toString() {
+        return "(" + searchedSeqChar + ":" + searchedSeqCoordinate + "," + dataSetSeqChar + ":" + dataSetSeqCoordinate + ")";
     }
 }
