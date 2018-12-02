@@ -214,7 +214,7 @@ public class DiagSelection {
             j--;
         }
 
-        while (searchedStart < searchedSequence.size() && dataSetStart < dataSetSequence.size()) {
+        while (searchedStart < searchedSequence.length() && dataSetStart < dataSetSequence.length()) {
             diagScore += fineTable.get(searchedSequence.get(searchedStart), dataSetSequence.get(dataSetStart));
             searchedStart++;
             dataSetStart++;

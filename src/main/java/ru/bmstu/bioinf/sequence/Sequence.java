@@ -12,11 +12,15 @@ public class Sequence {
         this.sequence = sequence;
     }
 
-    public String subSequence(int i, int j) {
+    public String substring(int i, int j) {
         return sequence.substring(i, j);
     }
 
-    public int size() {
+    public String substring(int i) {
+        return sequence.substring(i);
+    }
+
+    public int length() {
         return sequence.length();
     }
 
