@@ -8,12 +8,12 @@ import java.util.Map;
 public class FineTable {
     public static final Character GAP = '-';
 
-    private int E = -2;
+    private float E = -2;
     private Map<Character, Integer> keys;
 
     private static FineTable instance;
 
-    private final int[][] BLOSUM62 = {
+    private final float[][] BLOSUM62 = {
             //        A   R   N   D   C   Q   E   G   H   I   L   K   M   F   P   S   T   W   Y   V   B   Z   X  -
             /* A */ { 4, -1, -2, -2,  0, -1, -1,  0, -2, -1, -1, -1, -1, -2, -1,  1,  0, -3, -2,  0, -2, -1,  0, -4},
             /* R */ {-1,  5,  0, -2, -3,  1,  0, -2,  0, -3, -2,  2, -1, -3, -2, -1, -1, -3, -2, -3, -1,  0 ,-1, -4},
@@ -41,7 +41,7 @@ public class FineTable {
             /* - */ {-4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4,  1}
     };
 
-    public static FineTable getInstance(Integer gap) {
+    public static FineTable getInstance(Float gap) {
         if (instance == null) {
             instance = new FineTable(gap);
         }
@@ -86,7 +86,7 @@ public class FineTable {
         keys.put(GAP, 23);
     }
 
-    private FineTable(Integer gap) {
+    private FineTable(Float gap) {
         this();
 
         if (gap != null) {
@@ -100,7 +100,7 @@ public class FineTable {
     /**
      * TODO делать проверку в конструкторе последовательнотси {@link Sequence}
      */
-    public int get(char x, char y) {
+    public float get(char x, char y) {
         if (x != GAP && !Character.isLetter(x)) {
             throw new IllegalStateException("Wrong character in sequence: " + x);
         } else if (y != GAP && !Character.isLetter(y)) {
@@ -110,7 +110,7 @@ public class FineTable {
         return BLOSUM62[keys.get(x)][keys.get(y)];
     }
 
-    public int getE() {
+    public float getE() {
         return E;
     }
 }
