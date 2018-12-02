@@ -30,18 +30,17 @@ public class NGramSelector {
          while (searchedIter.hasNext()) {
              NgramStruct current = searchedIter.next();
              List<NGram> result = getNewNGram(current);
-             if (result != null)
-                 ngrams.addAll(result);
+             ngrams.addAll(result);
          }
 
          return ngrams;
     }
 
     /**
-     * Сопоставляет n-грамму из searched и n-грамму из data
-     * В случае успеха, возвращает новый объект класса NGram
-     * Если searched или data последовательность закончена, возвращает null
-     * @return новую ngram или null
+     * Сопоставляет n-грамму из searched и n-граммы из data
+     * В случае успеха, возвращает список объектов класса NGram
+     * Если searched или data последовательность закончена, возвращает пустой список
+     * @return список ngram или пустой список
      */
     private List<NGram> getNewNGram(NgramStruct searchedNgramSeq) {
         dataSetIter.setPos(0); // Для новой ngramm начинаем поиск с нуля
