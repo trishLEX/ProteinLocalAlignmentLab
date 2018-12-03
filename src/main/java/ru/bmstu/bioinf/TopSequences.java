@@ -66,6 +66,8 @@ public class TopSequences {
 
         }
 
+        result.deleteCharAt(result.length() - 1).deleteCharAt(result.length() - 1);
+
         return result.toString();
     }
 }

@@ -10,7 +10,6 @@ public class ArgumentParser {
     private static final int MIN_N_GRAMS_COUNT_DEFAULT = 10;
     private static final int RADIUS_DEFAULT = 5;
     private static final int TOP_SIZE = 5;
-    private static final boolean PRINT_ALIGNMENT_DEFAULT = false;
 
     private ArgumentParser() {
         //utility class
@@ -31,7 +30,7 @@ public class ArgumentParser {
             String searchedFile = cmd.getOptionValue("s");
             String dataSetFile = cmd.getOptionValue("d");
             int topSize = cmd.hasOption("t") ? Integer.parseInt(cmd.getOptionValue("t")) : TOP_SIZE;
-            boolean printAlignment = cmd.hasOption("p") || PRINT_ALIGNMENT_DEFAULT;
+            boolean printAlignment = cmd.hasOption("p");
 
 
             return new Arguments(gap, nGramLen, diagScore, nGramsCount, radius, searchedFile, dataSetFile, printAlignment, topSize);
