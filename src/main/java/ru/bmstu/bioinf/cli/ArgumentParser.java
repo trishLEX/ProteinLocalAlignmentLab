@@ -1,4 +1,4 @@
-package ru.bmstu.bioinf;
+package ru.bmstu.bioinf.cli;
 
 import org.apache.commons.cli.*;
 
@@ -10,31 +10,35 @@ public class ArgumentParser {
     private static final int MIN_N_GRAMS_COUNT_DEFAULT = 10;
     private static final int RADIUS_DEFAULT = 5;
     private static final int TOP_SIZE = 5;
+    private static final boolean PRINT_ALIGNMENT = false;
+
+    private ArgumentParser() {
+        //utility class
+    }
 
     public static Arguments parse(String[] args) {
         Options options = setupCommandLineOptions();
         CommandLineParser parser = new DefaultParser();
 
-        CommandLine cmd = null;
         try {
-            cmd = parser.parse(options, args);
+            CommandLine cmd = parser.parse(options, args);
+
+            float gap = cmd.hasOption("g") ? Float.parseFloat(cmd.getOptionValue("g")) : GAP_DEFAULT;
+            int nGramLen = cmd.hasOption("l") ? Integer.parseInt(cmd.getOptionValue("l")) : N_GRAM_LENGTH_DEFAULT;
+            float diagScore = cmd.hasOption("D") ? Float.parseFloat(cmd.getOptionValue("D")) : MIN_DIAG_SCORE_DEFAULT;
+            int nGramsCount = cmd.hasOption("n") ? Integer.parseInt(cmd.getOptionValue("n")) : MIN_N_GRAMS_COUNT_DEFAULT;
+            int radius = cmd.hasOption("r") ? Integer.parseInt(cmd.getOptionValue("r")) : RADIUS_DEFAULT;
+            String searchedFile = cmd.getOptionValue("s");
+            String dataSetFile = cmd.getOptionValue("d");
+            int topSize = cmd.hasOption("t") ? Integer.parseInt(cmd.getOptionValue("t")) : TOP_SIZE;
+
+
+            return new Arguments(gap, nGramLen, diagScore, nGramsCount, radius, searchedFile, dataSetFile, PRINT_ALIGNMENT, topSize);
         } catch (ParseException e) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("arguments", options);
-            System.exit(0);
+            formatter.printHelp("cli", options);
+            throw new IllegalStateException("Can't parse cli");
         }
-
-        float gap = cmd.hasOption("g") ? Float.parseFloat(cmd.getOptionValue("g")) : GAP_DEFAULT;
-        int nGramLen = cmd.hasOption("l") ? Integer.parseInt(cmd.getOptionValue("l")) : N_GRAM_LENGTH_DEFAULT;
-        float diagScore = cmd.hasOption("D") ? Float.parseFloat(cmd.getOptionValue("D")) : MIN_DIAG_SCORE_DEFAULT;
-        int nGramsCount = cmd.hasOption("n") ? Integer.parseInt(cmd.getOptionValue("n")) : MIN_N_GRAMS_COUNT_DEFAULT;
-        int radius = cmd.hasOption("r") ? Integer.parseInt(cmd.getOptionValue("r")) : RADIUS_DEFAULT;
-        String searchedFile = cmd.getOptionValue("s");
-        String dataSetFile = cmd.getOptionValue("d");
-        int topSize = cmd.hasOption("t") ? Integer.parseInt(cmd.getOptionValue("t")) : TOP_SIZE;
-
-
-        return new Arguments(gap, nGramLen, diagScore, nGramsCount, radius, searchedFile, dataSetFile, false, topSize);
     }
 
     private static Options setupCommandLineOptions() {

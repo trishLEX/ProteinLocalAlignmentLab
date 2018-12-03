@@ -1,5 +1,7 @@
 package ru.bmstu.bioinf;
 
+import ru.bmstu.bioinf.cli.ArgumentParser;
+import ru.bmstu.bioinf.cli.Arguments;
 import ru.bmstu.bioinf.filtering.DiagSelection;
 import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
@@ -13,9 +15,9 @@ public class Main {
 
         Arguments arguments = ArgumentParser.parse(args);
 
-        TopSequences tops = new TopSequences(arguments.getTopSize(), arguments.isPrintAlignment());
-
         FineTable.getInstance(arguments.getGap());
+
+        TopSequences tops = new TopSequences(arguments.getTopSize(), arguments.isPrintAlignment());
 
         while (arguments.getDataSequences().hasNext()) {
             Sequence dataSetSequence = arguments.getDataSequences().next();
@@ -27,7 +29,7 @@ public class Main {
                     arguments.getNgramLength(),
                     arguments.getDiagScore(),
                     arguments.getNgramCount(),
-                    arguments.getRaduis()
+                    arguments.getRadius()
             );
 
             Map<Node, Node> diagonals = selection.getDiagonals();
@@ -46,6 +48,7 @@ public class Main {
                 tops.add(alignment);
             }
         }
+
         System.out.println(tops);
     }
 }

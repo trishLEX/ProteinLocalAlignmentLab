@@ -1,4 +1,4 @@
-package ru.bmstu.bioinf;
+package ru.bmstu.bioinf.cli;
 
 import ru.bmstu.bioinf.sequence.Sequence;
 import ru.bmstu.bioinf.sequence.SequenceReader;
@@ -8,19 +8,23 @@ public class Arguments {
     private int ngramLength;
     private float diagScore;
     private int ngramCount;
-    private int raduis;
+    private int radius;
     private Sequence searchedSequence;
     private SequenceReader dataSequences;
     private boolean printAlignment;
     private int topSize;
 
-    public Arguments(float gap, int ngramLength, float diagScore, int ngramCount,
-                     int raduis, String searchedFile, String dataFile, boolean printAlignment, int topSize) {
+    /**
+     * Фабричный метод находится в {@link ArgumentParser::parse}
+     */
+    Arguments(float gap, int ngramLength, float diagScore, int ngramCount,
+            int radius, String searchedFile, String dataFile, boolean printAlignment, int topSize)
+    {
         this.gap = gap;
         this.ngramLength = ngramLength;
         this.diagScore = diagScore;
         this.ngramCount = ngramCount;
-        this.raduis = raduis;
+        this.radius = radius;
         this.searchedSequence = new SequenceReader(searchedFile).next();
         this.dataSequences = new SequenceReader(dataFile);
         this.printAlignment = printAlignment;
@@ -43,8 +47,8 @@ public class Arguments {
         return ngramCount;
     }
 
-    public int getRaduis() {
-        return raduis;
+    public int getRadius() {
+        return radius;
     }
 
     public Sequence getSearchedSequence() {
