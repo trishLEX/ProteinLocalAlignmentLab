@@ -12,6 +12,10 @@ public class Sequence {
         this.sequence = sequence;
     }
 
+    public String getSequence() {
+        return sequence;
+    }
+
     public String substring(int i, int j) {
         return sequence.substring(i, j);
     }
