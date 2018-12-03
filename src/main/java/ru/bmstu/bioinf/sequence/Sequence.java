@@ -1,9 +1,11 @@
 package ru.bmstu.bioinf.sequence;
 
+import java.io.Serializable;
+
 /**
  * Последовательность белка
  */
-public class Sequence {
+public class Sequence implements Serializable {
     private String name;
     private String sequence;
 
