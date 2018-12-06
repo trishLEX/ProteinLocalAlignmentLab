@@ -1,44 +1,44 @@
 package ru.bmstu.bioinf.sequence;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Считыватель последовательностей в формате .fasta
  */
 public class SequenceReader implements Iterator<Sequence> {
     private Sequence next;
-    private File file;
-    private List<String> lines;
-    private int currentLine;
+    private BufferedReader reader;
+    private String lastName;
 
     public SequenceReader(String filePath) {
-        this.file = new File(filePath);
-        this.currentLine = 0;
+        File file = new File(filePath);
+
+        try {
+            this.reader = new BufferedReader(new FileReader(file));
+            this.lastName = reader.readLine();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Can't read from file: " + filePath, e);
+        }
     }
 
     @Override
     public boolean hasNext() {
-
-        try {
-            if (lines == null) {
-                lines = Files.readAllLines(file.toPath());
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Can't read from file: " + file, e);
-        }
-
         if (next != null) {
             return true;
-        } else if (currentLine + 1 < lines.size()) {
+        } else {
+            if (lastName == null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+                return false;
+            }
+
             next = getNext();
             return true;
-        } else {
-            return false;
         }
     }
 
@@ -58,21 +58,29 @@ public class SequenceReader implements Iterator<Sequence> {
     }
 
     private Sequence getNext() {
-        String name = lines.get(currentLine);
+        LinkedList<String> lines = new LinkedList<>();
+        String name = lastName;
+        try {
+            String line = reader.readLine();
 
-        currentLine++;
-
-        StringBuilder sequence = new StringBuilder();
-
-        for (int i = currentLine; i < lines.size(); i++) {
-            if (lines.get(i).charAt(0) == '>') {
-                break;
-            } else {
-                sequence.append(lines.get(i));
-                currentLine++;
+            while (line.charAt(0) != '>') {
+                lines.add(line);
+                line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
             }
+
+            lastName = line;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
 
-        return new Sequence(name, sequence.toString());
+        StringBuilder builder = new StringBuilder();
+        for (String line : lines) {
+            builder.append(line);
+        }
+
+        return new Sequence(name, builder.toString());
     }
 }

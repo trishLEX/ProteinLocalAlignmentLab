@@ -1,0 +1,9 @@
+>prot1
+ABCDE
+FGH
+>prot2
+FGTAASD
+AD
+ASDADS
+>prot4
+A
