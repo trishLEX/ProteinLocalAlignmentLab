@@ -5,28 +5,26 @@ import ru.bmstu.bioinf.sequence.SequenceReader;
 
 public class Arguments {
     private float gap;
-    private int ngramLength;
     private float diagScore;
-    private int ngramCount;
+    private int biGramCount;
     private int radius;
     private Sequence searchedSequence;
-    private SequenceReader dataSequences;
+    private SequenceReader dataSetSequenceReader;
     private boolean printAlignment;
     private int topSize;
 
     /**
-     * Фабричный метод находится в {@link ArgumentParser::parse}
+     * Фабричный метод находится в {@link ArgumentParser#parse}
      */
-    Arguments(float gap, int ngramLength, float diagScore, int ngramCount,
+    Arguments(float gap, float diagScore, int biGramCount,
             int radius, String searchedFile, String dataFile, boolean printAlignment, int topSize)
     {
         this.gap = gap;
-        this.ngramLength = ngramLength;
         this.diagScore = diagScore;
-        this.ngramCount = ngramCount;
+        this.biGramCount = biGramCount;
         this.radius = radius;
         this.searchedSequence = new SequenceReader(searchedFile).next();
-        this.dataSequences = new SequenceReader(dataFile);
+        this.dataSetSequenceReader = new SequenceReader(dataFile);
         this.printAlignment = printAlignment;
         this.topSize = topSize;
     }
@@ -35,16 +33,12 @@ public class Arguments {
         return gap;
     }
 
-    public int getNgramLength() {
-        return ngramLength;
-    }
-
     public float getDiagScore() {
         return diagScore;
     }
 
-    public int getNgramCount() {
-        return ngramCount;
+    public int getBiGramCount() {
+        return biGramCount;
     }
 
     public int getRadius() {
@@ -55,8 +49,8 @@ public class Arguments {
         return searchedSequence;
     }
 
-    public SequenceReader getDataSequences() {
-        return dataSequences;
+    public SequenceReader getDataSetSequenceReader() {
+        return dataSetSequenceReader;
     }
 
     public boolean isPrintAlignment() {

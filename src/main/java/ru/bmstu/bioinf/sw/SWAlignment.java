@@ -11,7 +11,6 @@ import java.util.Map;
 public class SWAlignment {
     private Sequence searched;
     private Sequence fromBase;
-    private Map<Pair<Integer, Integer>, SWNode> matrix;
     private FineTable table;
     private SWNode maxNode;
 
@@ -33,7 +32,7 @@ public class SWAlignment {
     }
 
     private void computeMatrix(int top, int bottom, int left, int right) {
-        matrix = new LinkedHashMap<>();
+        Map<Pair<Integer, Integer>, SWNode> matrix = new LinkedHashMap<>();
         maxNode = new SWNode(0,0, 0.0f, SWNode.zero);
 
         int searchStartCoord = Math.max((left - top) / 2, 0);
@@ -74,7 +73,9 @@ public class SWAlignment {
         }
     }
 
-    //Возвращает пару (верхняя диагональ, нижняя диагональ) + дополнительный отступ (где возможно)
+    /**
+     * @return пару (верхняя диагональ, нижняя диагональ) + дополнительный отступ (где возможно)
+     */
     private Pair<Integer, Integer> getBorder(Node routeStart, Node routeFinish) {
         Node curNode = routeFinish;
         int topDiag =

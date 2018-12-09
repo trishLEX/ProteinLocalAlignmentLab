@@ -5,7 +5,6 @@ import org.apache.commons.cli.*;
 public class ArgumentParser {
 
     private static final int GAP_DEFAULT = -2;
-    private static final int N_GRAM_LENGTH_DEFAULT = 2;
     private static final float MIN_DIAG_SCORE_DEFAULT = 60.0f;
     private static final int MIN_N_GRAMS_COUNT_DEFAULT = 10;
     private static final int RADIUS_DEFAULT = 5;
@@ -23,7 +22,6 @@ public class ArgumentParser {
             CommandLine cmd = parser.parse(options, args);
 
             float gap = cmd.hasOption("g") ? Float.parseFloat(cmd.getOptionValue("g")) : GAP_DEFAULT;
-            int nGramLen = cmd.hasOption("l") ? Integer.parseInt(cmd.getOptionValue("l")) : N_GRAM_LENGTH_DEFAULT;
             float diagScore = cmd.hasOption("D") ? Float.parseFloat(cmd.getOptionValue("D")) : MIN_DIAG_SCORE_DEFAULT;
             int nGramsCount = cmd.hasOption("n") ? Integer.parseInt(cmd.getOptionValue("n")) : MIN_N_GRAMS_COUNT_DEFAULT;
             int radius = cmd.hasOption("r") ? Integer.parseInt(cmd.getOptionValue("r")) : RADIUS_DEFAULT;
@@ -33,11 +31,11 @@ public class ArgumentParser {
             boolean printAlignment = cmd.hasOption("p");
 
 
-            return new Arguments(gap, nGramLen, diagScore, nGramsCount, radius, searchedFile, dataSetFile, printAlignment, topSize);
+            return new Arguments(gap, diagScore, nGramsCount, radius, searchedFile, dataSetFile, printAlignment, topSize);
         } catch (ParseException e) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("cli", options);
-            throw new IllegalStateException("Can't parse cli");
+            throw new IllegalStateException("Can't parse arguments", e);
         }
     }
 

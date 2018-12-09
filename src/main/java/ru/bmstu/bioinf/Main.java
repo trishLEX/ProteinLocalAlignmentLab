@@ -5,30 +5,32 @@ import ru.bmstu.bioinf.cli.Arguments;
 import ru.bmstu.bioinf.filtering.DiagSelection;
 import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
+import ru.bmstu.bioinf.sequence.SequenceReader;
 import ru.bmstu.bioinf.sw.SWAlignment;
 
 import java.util.Map;
 
 public class Main {
-
     public static void main(String[] args) {
-
         Arguments arguments = ArgumentParser.parse(args);
 
         FineTable.getInstance(arguments.getGap());
 
         TopSequences tops = new TopSequences(arguments.getTopSize(), arguments.isPrintAlignment());
 
-        while (arguments.getDataSequences().hasNext()) {
-            Sequence dataSetSequence = arguments.getDataSequences().next();
+        SequenceReader dataSetSequenceReader = arguments.getDataSetSequenceReader();
+
+        long startTime = System.currentTimeMillis();
+
+        while (dataSetSequenceReader.hasNext()) {
+            Sequence dataSetSequence = dataSetSequenceReader.next();
 
             DiagSelection selection = new DiagSelection(
                     arguments.getSearchedSequence(),
                     dataSetSequence,
                     arguments.getGap(),
-                    arguments.getNgramLength(),
                     arguments.getDiagScore(),
-                    arguments.getNgramCount(),
+                    arguments.getBiGramCount(),
                     arguments.getRadius()
             );
 
@@ -49,6 +51,9 @@ public class Main {
             }
         }
 
+        long endTime = System.currentTimeMillis();
+
         System.out.println(tops);
+        System.out.println(String.format("%.2fs", (endTime - startTime) / 1000.0f));
     }
 }

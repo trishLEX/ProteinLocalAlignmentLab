@@ -1,7 +1,5 @@
 package ru.bmstu.bioinf.sw;
 
-
-
 public class SWNode {
     public int getSearchedCoord() {
         return searchedCoord;

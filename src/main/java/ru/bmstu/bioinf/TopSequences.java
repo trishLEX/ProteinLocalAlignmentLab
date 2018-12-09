@@ -5,11 +5,11 @@ import ru.bmstu.bioinf.sw.SWAlignment;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Хранит топ size последовательностей, самая похожая под индексом 0 в {@link TopSequences#alignments}
+ */
 public class TopSequences {
-
     private int size;
-    //Хранит топ size последовательностей, самая похожая под индексом 0
     private List<SWAlignment> alignments;
     private boolean printAlignments;
 
@@ -49,7 +49,6 @@ public class TopSequences {
         StringBuilder result = new StringBuilder();
 
         for (SWAlignment alignment : alignments) {
-
             if (printAlignments) {
                 result
                         .append(alignment.toString())
@@ -62,8 +61,6 @@ public class TopSequences {
                         .append(alignment.getFromBase().getName())
                         .append("\n\n");
             }
-
-
         }
 
         result.deleteCharAt(result.length() - 1).deleteCharAt(result.length() - 1);

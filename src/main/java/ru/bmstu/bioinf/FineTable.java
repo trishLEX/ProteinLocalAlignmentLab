@@ -1,7 +1,5 @@
 package ru.bmstu.bioinf;
 
-import ru.bmstu.bioinf.sequence.Sequence;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,16 +95,7 @@ public class FineTable {
         }
     }
 
-    /**
-     * TODO делать проверку в конструкторе последовательнотси {@link Sequence}
-     */
     public float get(char x, char y) {
-        if (x != GAP && !Character.isLetter(x)) {
-            throw new IllegalStateException("Wrong character in sequence: " + x);
-        } else if (y != GAP && !Character.isLetter(y)) {
-            throw new IllegalStateException("Wrong character in sequence: " + y);
-        }
-
         return BLOSUM62[keys.get(x)][keys.get(y)];
     }
 

@@ -1,6 +1,5 @@
 package ru.bmstu.bioinf.sw;
 
-
 import java.io.Serializable;
 import java.util.Objects;
 
