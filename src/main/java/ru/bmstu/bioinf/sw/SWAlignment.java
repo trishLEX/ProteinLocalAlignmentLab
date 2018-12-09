@@ -187,10 +187,10 @@ public class SWAlignment {
         int nextI;
         for(int i = 0; i < newBase.length(); i = nextI) {
             nextI = Math.min(i + 70, newBase.length());
-            resulting.append("searchedSequence: ");
+            resulting.append("searched: ");
             resulting.append(newSearched, i, nextI);
             resulting.append("\n");
-            resulting.append("dataSetSequence: ");
+            resulting.append("fromBase: ");
             resulting.append(newBase, i, nextI);
             resulting.append("\n");
         }
