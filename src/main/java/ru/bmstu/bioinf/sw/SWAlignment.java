@@ -33,7 +33,7 @@ public class SWAlignment {
 
     private void computeMatrix(int top, int bottom, int left, int right) {
         Map<Pair<Integer, Integer>, SWNode> matrix = new LinkedHashMap<>();
-        maxNode = new SWNode(0,0, 0.0f, SWNode.zero);
+        maxNode = new SWNode(0,0, 0.0f, SWNode.ZERO);
 
         int searchStartCoord = Math.max((left - top) / 2, 0);
         int searchUntilCoord = Math.min((right - bottom) / 2 + 1, searched.length());
@@ -49,24 +49,24 @@ public class SWAlignment {
 
             for(int j = start; j < until; ++j) {
                 SWNode nodeij = SWNode.max(
-                        SWNode.zero,
+                        SWNode.ZERO,
                         new SWNode(i, j, table.getE(),
                                 matrix.getOrDefault(
                                         new Pair<>(i - 1, j),
                                         new SWNode(
-                                                i - 1, j, 0.0f, SWNode.zero))
+                                                i - 1, j, 0.0f, SWNode.ZERO))
                         ),
                         new SWNode(i, j, table.getE(),
                                 matrix.getOrDefault(
                                         new Pair<>(i, j - 1),
                                         new SWNode(
-                                                i, j - 1, 0.0f, SWNode.zero))
+                                                i, j - 1, 0.0f, SWNode.ZERO))
                         ),
                         new SWNode(i, j, table.get(searched.get(i), fromBase.get(j)),
                                 matrix.getOrDefault(
                                         new Pair<>(i - 1, j - 1),
                                         new SWNode(
-                                                i - 1, j - 1, 0.0f, SWNode.zero))
+                                                i - 1, j - 1, 0.0f, SWNode.ZERO))
                         ));
 
                 maxNode = SWNode.max(maxNode, nodeij);
