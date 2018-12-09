@@ -1,18 +1,25 @@
 package ru.bmstu.bioinf.sw;
 
 public class SWNode {
-    public static final SWNode ZERO = new SWNode(-1, -1, 0.0f, null);
+    public static final SWNode ZERO = new SWNode(-1, -1, 0.0f, null,null);
 
     private int searchedCoord;
     private int baseCoord;
     private SWNode parent;
     private float score;
 
-    public SWNode(int searchedCoord, int baseCoord, float addition, SWNode parent) {
+    public Action getAction() {
+        return action;
+    }
+
+    private Action action;
+
+    public SWNode(int searchedCoord, int baseCoord, float addition, Action action, SWNode parent) {
         this.searchedCoord = searchedCoord;
         this.baseCoord = baseCoord;
         this.parent = parent;
         this.score = (parent == null) ? addition : parent.getScore() + addition;
+        this.action = action;
     }
 
     public Pair<Integer, Integer> getCoords() {

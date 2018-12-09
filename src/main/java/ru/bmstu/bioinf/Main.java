@@ -53,7 +53,7 @@ public class Main {
 
         long endTime = System.currentTimeMillis();
 
-        System.out.println(tops);
         System.out.println(String.format("%.2fs", (endTime - startTime) / 1000.0f));
+        System.out.println(tops);
     }
 }

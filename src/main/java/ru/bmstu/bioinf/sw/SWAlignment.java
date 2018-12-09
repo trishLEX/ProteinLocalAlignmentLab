@@ -33,7 +33,7 @@ public class SWAlignment {
 
     private void computeMatrix(int top, int bottom, int left, int right) {
         Map<Pair<Integer, Integer>, SWNode> matrix = new LinkedHashMap<>();
-        maxNode = new SWNode(0,0, 0.0f, SWNode.ZERO);
+        maxNode = SWNode.ZERO;
 
         int searchStartCoord = Math.max((left - top) / 2, 0);
         int searchUntilCoord = Math.min((right - bottom) / 2 + 1, searched.length());
@@ -50,24 +50,25 @@ public class SWAlignment {
             for(int j = start; j < until; ++j) {
                 SWNode nodeIJ = SWNode.max(
                         SWNode.ZERO,
-                        new SWNode(i, j, table.getE(),
+                        new SWNode(i, j, table.getE(), Action.GAP_BASE,
                                 matrix.getOrDefault(
                                         new Pair<>(i - 1, j),
-                                        new SWNode(
-                                                i - 1, j, 0.0f, SWNode.ZERO))
+                                        SWNode.ZERO
+                                )
                         ),
-                        new SWNode(i, j, table.getE(),
+                        new SWNode(i, j, table.getE(), Action.GAP_SEARCHED,
                                 matrix.getOrDefault(
                                         new Pair<>(i, j - 1),
-                                        new SWNode(
-                                                i, j - 1, 0.0f, SWNode.ZERO))
+                                        SWNode.ZERO
+                                )
                         ),
-                        new SWNode(i, j, table.get(searched.get(i), fromBase.get(j)),
+                        new SWNode(i, j, table.get(searched.get(i), fromBase.get(j)), Action.MATCH,
                                 matrix.getOrDefault(
                                         new Pair<>(i - 1, j - 1),
-                                        new SWNode(
-                                                i - 1, j - 1, 0.0f, SWNode.ZERO))
-                        ));
+                                        SWNode.ZERO
+                                )
+                        )
+                );
 
                 maxNode = SWNode.max(maxNode, nodeIJ);
 
@@ -118,46 +119,69 @@ public class SWAlignment {
         StringBuilder sbBase = new StringBuilder();
 
         SWNode curNode = maxNode;
-        SWNode parent;
 
+        int lenBase = 0;
+        int lenSearched = 0;
         while(Float.compare(curNode.getScore(), 0.0f) != 0) {
-            parent = curNode.getParent();
 
-            if(curNode.getBaseCoord() - parent.getBaseCoord() > 0) {
-                sbBase.insert(0, fromBase.get(curNode.getBaseCoord()));
-            } else {
-                sbBase.insert(0, "-");
+            switch(curNode.getAction()) {
+                case MATCH:
+                    sbBase.insert(0, fromBase.get(curNode.getBaseCoord()));
+                    sbSearched.insert(0, searched.get(curNode.getSearchedCoord()));
+                    ++lenBase;
+                    ++lenSearched;
+                    break;
+                case GAP_BASE:
+                    sbBase.insert(0, "-");
+                    sbSearched.insert(0, searched.get(curNode.getSearchedCoord()));
+                    ++lenSearched;
+                    break;
+                case GAP_SEARCHED:
+                    sbBase.insert(0, fromBase.get(curNode.getBaseCoord()));
+                    ++lenBase;
+                    sbSearched.insert(0, "-");
             }
 
-            if(curNode.getSearchedCoord() - parent.getSearchedCoord() > 0) {
-                sbSearched.insert(0, searched.get(curNode.getSearchedCoord()));
-            } else {
-                sbSearched.insert(0, "-");
-            }
-
-            curNode = parent;
+            curNode = curNode.getParent();
         }
 
-        sbSearched.insert(0,
-                String.join("",
-                        Collections.nCopies(curNode.getBaseCoord() + 1, "-")));
+        if(lenBase + lenSearched != 0) {
 
-        sbSearched.append(
-                String.join("",
-                        Collections.nCopies(fromBase.length() - maxNode.getBaseCoord() - 1, "-")));
 
-        sbSearched.insert(0, searched.substring(0, curNode.getSearchedCoord() + 1));
-        sbSearched.append(searched.substring(maxNode.getSearchedCoord() + 1));
-        sbBase.insert(0, fromBase.substring(0, curNode.getBaseCoord() + 1));
-        sbBase.append(fromBase.substring(maxNode.getBaseCoord() + 1));
+            sbSearched.insert(0,
+                    String.join("",
+                            Collections.nCopies(maxNode.getBaseCoord() - lenBase + 1, "-")));
 
-        sbBase.insert(0,
-                String.join("",
-                        Collections.nCopies(curNode.getSearchedCoord() + 1, "-")));
+            sbSearched.append(
+                    String.join("",
+                            Collections.nCopies(fromBase.length() - maxNode.getBaseCoord() - 1, "-")));
 
-        sbBase.append(
-                String.join("",
-                        Collections.nCopies(searched.length() - maxNode.getSearchedCoord() - 1,"-")));
+            sbSearched.insert(0,
+                    searched.substring(0, maxNode.getSearchedCoord() - lenSearched + 1));
+            sbSearched.append(searched.substring(maxNode.getSearchedCoord() + 1));
+            sbBase.insert(0, fromBase.substring(0, maxNode.getBaseCoord() - lenBase + 1));
+            sbBase.append(fromBase.substring(maxNode.getBaseCoord() + 1));
+
+            sbBase.insert(0,
+                    String.join("",
+                            Collections.nCopies(maxNode.getSearchedCoord() - lenSearched + 1, "-")));
+
+            sbBase.append(
+                    String.join("",
+                            Collections.nCopies(searched.length() - maxNode.getSearchedCoord() - 1, "-")));
+        } else {
+            sbBase.insert(0,
+                    String.join("",
+                            Collections.nCopies(searched.length(), "-")
+                    )
+            );
+            sbBase.append(fromBase.getSequence());
+            sbSearched.append(searched.getSequence());
+            sbSearched.append(String.join("",
+                    Collections.nCopies(fromBase.length(), "-"))
+            );
+
+        }
 
         String newSearched = sbSearched.toString();
         String newBase = sbBase.toString();
