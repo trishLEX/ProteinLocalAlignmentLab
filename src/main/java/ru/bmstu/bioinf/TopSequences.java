@@ -51,6 +51,8 @@ public class TopSequences {
         for (SWAlignment alignment : alignments) {
             if (printAlignments) {
                 result
+                        .append(alignment.getDataSetSequence().getName())
+                        .append("\n")
                         .append(alignment.toString())
                         .append("\n\n");
             } else {
@@ -63,7 +65,9 @@ public class TopSequences {
             }
         }
 
-        result.deleteCharAt(result.length() - 1).deleteCharAt(result.length() - 1);
+        if (result.length() != 0) {
+            result.deleteCharAt(result.length() - 1).deleteCharAt(result.length() - 1);
+        }
 
         return result.toString();
     }
