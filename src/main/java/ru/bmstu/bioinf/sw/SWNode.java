@@ -1,10 +1,10 @@
 package ru.bmstu.bioinf.sw;
 
 public class SWNode {
-    public static final SWNode ZERO = new SWNode(-1, -1, 0.0f, null,null);
+    public static final SWNode ZERO = new SWNode(-1, -1, 0.0f, null, null);
 
-    private int searchedCoord;
-    private int baseCoord;
+    private int searchedSeqCoordinate;
+    private int dataSetSeqCoordinate;
     private SWNode parent;
     private float score;
 
@@ -14,16 +14,16 @@ public class SWNode {
 
     private Action action;
 
-    public SWNode(int searchedCoord, int baseCoord, float addition, Action action, SWNode parent) {
-        this.searchedCoord = searchedCoord;
-        this.baseCoord = baseCoord;
+    public SWNode(int searchedSeqCoordinate, int dataSetSeqCoordinate, float addition, Action action, SWNode parent) {
+        this.searchedSeqCoordinate = searchedSeqCoordinate;
+        this.dataSetSeqCoordinate = dataSetSeqCoordinate;
         this.parent = parent;
         this.score = (parent == null) ? addition : parent.getScore() + addition;
         this.action = action;
     }
 
     public Pair<Integer, Integer> getCoords() {
-        return new Pair<>(searchedCoord, baseCoord);
+        return new Pair<>(searchedSeqCoordinate, dataSetSeqCoordinate);
     }
 
     public SWNode getParent() {
@@ -34,12 +34,12 @@ public class SWNode {
         return score;
     }
 
-    public int getSearchedCoord() {
-        return searchedCoord;
+    public int getSearchedSeqCoordinate() {
+        return searchedSeqCoordinate;
     }
 
-    public int getBaseCoord() {
-        return baseCoord;
+    public int getDataSetSeqCoordinate() {
+        return dataSetSeqCoordinate;
     }
 
     public static SWNode max(SWNode first, SWNode... other) {
@@ -48,6 +48,7 @@ public class SWNode {
                 first = cur;
             }
         }
+
         return first;
     }
 }

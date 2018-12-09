@@ -58,7 +58,7 @@ public class TopSequences {
                         .append("Score: ")
                         .append(alignment.getScore())
                         .append(" ")
-                        .append(alignment.getFromBase().getName())
+                        .append(alignment.getDataSetSequence().getName())
                         .append("\n\n");
             }
         }
