@@ -48,7 +48,7 @@ public class SWAlignment {
                     fromBase.length());
 
             for(int j = start; j < until; ++j) {
-                SWNode nodeij = SWNode.max(
+                SWNode nodeIJ = SWNode.max(
                         SWNode.ZERO,
                         new SWNode(i, j, table.getE(),
                                 matrix.getOrDefault(
@@ -69,9 +69,9 @@ public class SWAlignment {
                                                 i - 1, j - 1, 0.0f, SWNode.ZERO))
                         ));
 
-                maxNode = SWNode.max(maxNode, nodeij);
+                maxNode = SWNode.max(maxNode, nodeIJ);
 
-                matrix.put(new Pair<>(i, j), nodeij);
+                matrix.put(new Pair<>(i, j), nodeIJ);
             }
         }
     }
@@ -137,6 +137,7 @@ public class SWAlignment {
 
             curNode = parent;
         }
+
         sbSearched.insert(0,
                 String.join("",
                         Collections.nCopies(curNode.getBaseCoord() + 1, "-")));
