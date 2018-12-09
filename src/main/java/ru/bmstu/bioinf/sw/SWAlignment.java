@@ -14,7 +14,7 @@ public class SWAlignment {
     private FineTable table;
     private SWNode maxNode;
 
-    private static final int borderAdd = 32;
+    private static final int BORDER_ADD = 32;
 
     public SWAlignment(Sequence searched, Sequence fromBase,
                        Node routeStart, Node routeFinish, FineTable table) {
@@ -42,9 +42,11 @@ public class SWAlignment {
             int start = Math.max(
                     Math.max(left - i, bottom + i),
                     0);
+
             int until = Math.min(
                     Math.min(right - i + 1, top + i + 1),
                     fromBase.length());
+
             for(int j = start; j < until; ++j) {
                 SWNode nodeij = SWNode.max(
                         SWNode.zero,
@@ -60,12 +62,13 @@ public class SWAlignment {
                                         new SWNode(
                                                 i, j - 1, 0.0f, SWNode.zero))
                         ),
-                        new SWNode(i, j, (float) table.get(searched.get(i), fromBase.get(j)),
+                        new SWNode(i, j, table.get(searched.get(i), fromBase.get(j)),
                                 matrix.getOrDefault(
                                         new Pair<>(i - 1, j - 1),
                                         new SWNode(
                                                 i - 1, j - 1, 0.0f, SWNode.zero))
                         ));
+
                 maxNode = SWNode.max(maxNode, nodeij);
 
                 matrix.put(new Pair<>(i, j), nodeij);
@@ -78,20 +81,22 @@ public class SWAlignment {
      */
     private Pair<Integer, Integer> getBorder(Node routeStart, Node routeFinish) {
         Node curNode = routeFinish;
-        int topDiag =
-                routeFinish.getDataSetSeqCoordinate() - routeFinish.getSearchedSeqCoordinate();
+
+        int topDiag = routeFinish.getDataSetSeqCoordinate() - routeFinish.getSearchedSeqCoordinate();
         int bottomDiag = topDiag;
+
         while(!curNode.equals(routeStart)) {
             curNode = curNode.getMaxParent();
-            int candidate =
-                    curNode.getDataSetSeqCoordinate() - curNode.getSearchedSeqCoordinate();
+
+            int candidate = curNode.getDataSetSeqCoordinate() - curNode.getSearchedSeqCoordinate();
+
             topDiag = Math.max(topDiag, candidate);
             bottomDiag = Math.min(bottomDiag, candidate);
         }
 
         return new Pair<>(
-                Math.min(topDiag + borderAdd, fromBase.length() - 1),
-                Math.max(bottomDiag - borderAdd, 1 - searched.length())
+                Math.min(topDiag + BORDER_ADD, fromBase.length() - 1),
+                Math.max(bottomDiag - BORDER_ADD, 1 - searched.length())
         );
     }
 
@@ -111,35 +116,44 @@ public class SWAlignment {
     private String getAllignment() {
         StringBuilder sbSearched = new StringBuilder();
         StringBuilder sbBase = new StringBuilder();
+
         SWNode curNode = maxNode;
         SWNode parent;
+
         while(Float.compare(curNode.getScore(), 0.0f) != 0) {
             parent = curNode.getParent();
+
             if(curNode.getBaseCoord() - parent.getBaseCoord() > 0) {
                 sbBase.insert(0, fromBase.get(curNode.getBaseCoord()));
             } else {
                 sbBase.insert(0, "-");
             }
+
             if(curNode.getSearchedCoord() - parent.getSearchedCoord() > 0) {
                 sbSearched.insert(0, searched.get(curNode.getSearchedCoord()));
             } else {
                 sbSearched.insert(0, "-");
             }
+
             curNode = parent;
         }
         sbSearched.insert(0,
                 String.join("",
                         Collections.nCopies(curNode.getBaseCoord() + 1, "-")));
+
         sbSearched.append(
                 String.join("",
                         Collections.nCopies(fromBase.length() - maxNode.getBaseCoord() - 1, "-")));
+
         sbSearched.insert(0, searched.substring(0, curNode.getSearchedCoord() + 1));
         sbSearched.append(searched.substring(maxNode.getSearchedCoord() + 1));
         sbBase.insert(0, fromBase.substring(0, curNode.getBaseCoord() + 1));
         sbBase.append(fromBase.substring(maxNode.getBaseCoord() + 1));
+
         sbBase.insert(0,
                 String.join("",
                         Collections.nCopies(curNode.getSearchedCoord() + 1, "-")));
+
         sbBase.append(
                 String.join("",
                         Collections.nCopies(searched.length() - maxNode.getSearchedCoord() - 1,"-")));
@@ -148,14 +162,14 @@ public class SWAlignment {
         String newBase = sbBase.toString();
 
         StringBuilder resulting = new StringBuilder();
-        int nexti;
-        for(int i = 0; i < newBase.length(); i = nexti) {
-            nexti = Math.min(i + 70, newBase.length());
+        int nextI;
+        for(int i = 0; i < newBase.length(); i = nextI) {
+            nextI = Math.min(i + 70, newBase.length());
             resulting.append("searched: ");
-            resulting.append(newSearched.substring(i, nexti));
+            resulting.append(newSearched, i, nextI);
             resulting.append("\n");
             resulting.append("fromBase: ");
-            resulting.append(newBase.substring(i, nexti));
+            resulting.append(newBase, i, nextI);
             resulting.append("\n");
         }
         return resulting.toString();
