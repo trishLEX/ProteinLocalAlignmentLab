@@ -172,12 +172,19 @@ public class DiagSelection {
     private List<Set<Node>> getDiagNGrams() {
         List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
 
-        return nGrams
-                .stream()
-                .filter(nodes -> nodes.size() > minBiGrams * 2)
-                .limit(10)
-                .filter(nodes -> getDiagScore(nodes) > diagScore)
-                .collect(Collectors.toList());
+        List<Set<Node>> filtered = new ArrayList<>(10);
+
+        for(Set<Node> set : nGrams) {
+            if (set.size() > minBiGrams * 2 && getDiagScore(set) > diagScore) {
+                filtered.add(set);
+
+                if (filtered.size() == 10) {
+                    break;
+                }
+            }
+        }
+
+        return filtered;
     }
 
     private int getDiagScore(Set<Node> nodes) {
