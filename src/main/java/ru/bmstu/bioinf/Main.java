@@ -6,6 +6,7 @@ import ru.bmstu.bioinf.filtering.DiagSelection;
 import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
 import ru.bmstu.bioinf.sequence.SequenceReader;
+import ru.bmstu.bioinf.sequence.TopSequences;
 import ru.bmstu.bioinf.sw.SWAlignment;
 
 import java.util.Map;
