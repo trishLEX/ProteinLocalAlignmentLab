@@ -7,8 +7,7 @@ import ru.bmstu.bioinf.sequence.SequenceReader;
 import ru.bmstu.bioinf.sequence.TopSequences;
 import ru.bmstu.bioinf.threading.LocalAligner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,26 +25,37 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
-        List<Future> threads = new ArrayList<>();
+        Set<Future> threads = new HashSet<>();
 
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        System.out.println(Runtime.getRuntime().availableProcessors());
+        int maxThreads = Runtime.getRuntime().availableProcessors();
 
         while (dataSetSequenceReader.hasNext()) {
-            Sequence dataSetSequence = dataSetSequenceReader.next();
+            if(threads.size() == maxThreads) {
+                Iterator<Future> it = threads.iterator();
+                while(it.hasNext()) {
+                    Future t = it.next();
+                    if(t.isDone()){
+                        t.get();
+                        it.remove();
+                    }
+                }
+            } else {
+                Sequence dataSetSequence = dataSetSequenceReader.next();
 
-            LocalAligner aligner = new LocalAligner(
-                    tops,
-                    arguments.getSearchedSequence(),
-                    dataSetSequence,
-                    arguments.getGap(),
-                    arguments.getDiagScore(),
-                    arguments.getBiGramCount(),
-                    arguments.getRadius()
-            );
+                LocalAligner aligner = new LocalAligner(
+                        tops,
+                        arguments.getSearchedSequence(),
+                        dataSetSequence,
+                        arguments.getGap(),
+                        arguments.getDiagScore(),
+                        arguments.getBiGramCount(),
+                        arguments.getRadius()
+                );
 
-            Future future = executorService.submit(aligner);
-            threads.add(future);
+                Future future = executorService.submit(aligner);
+                threads.add(future);
+            }
         }
 
         for (Future thread : threads) {
