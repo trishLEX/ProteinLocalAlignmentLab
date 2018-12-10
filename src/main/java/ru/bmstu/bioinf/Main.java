@@ -32,12 +32,12 @@ public class Main {
                 completionService.take();
                 --counter;
             } else {
-                Sequence dataSetSequence = dataSetSequenceReader.next();
+                Sequence[] dataSetSequences = dataSetSequenceReader.next(50);
 
                 LocalAligner aligner = new LocalAligner(
                         tops,
                         arguments.getSearchedSequence(),
-                        dataSetSequence,
+                        dataSetSequences,
                         arguments.getGap(),
                         arguments.getDiagScore(),
                         arguments.getBiGramCount(),
