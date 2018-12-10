@@ -4,42 +4,29 @@ import ru.bmstu.bioinf.sw.SWAlignment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * Хранит топ size последовательностей, самая похожая под индексом 0 в {@link TopSequences#alignments}
  */
 public class TopSequences {
     private int size;
-    private List<SWAlignment> alignments;
+    private TreeSet<SWAlignment> alignments;
     private boolean printAlignments;
 
     public TopSequences(int size, boolean printAlignments) {
         this.size = size;
-        this.alignments = new ArrayList<>();
+        this.alignments = new TreeSet<>();
         this.printAlignments = printAlignments;
     }
 
     public void add(SWAlignment alignment) {
-        if (alignments.isEmpty()) {
-            alignments.add(alignment);
-        } else if (alignments.size() < size) {
-
-            for (int i = 0; i < alignments.size(); i++) {
-                if (alignments.get(i).getScore() <= alignment.getScore()) {
-                    alignments.add(i, alignment);
-                    return;
-                }
-            }
-
+        if (alignments.size() < size) {
             alignments.add(alignment);
         } else {
-
-            for (int i = 0; i < alignments.size(); i++) {
-                if (alignments.get(i).getScore() <= alignment.getScore()) {
-                    alignments.add(i, alignment);
-                    alignments.remove(size);
-                    return;
-                }
+            if (alignments.first().getScore() < alignment.getScore()) {
+                alignments.remove(alignments.first());
+                alignments.add(alignment);
             }
         }
     }

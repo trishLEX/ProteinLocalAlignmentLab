@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SWAlignment {
+public class SWAlignment implements Comparable<SWAlignment> {
     private Sequence searchedSequence;
     private Sequence dataSetSequence;
     private FineTable table;
@@ -196,5 +196,10 @@ public class SWAlignment {
         }
 
         return resulting.toString();
+    }
+
+    @Override
+    public int compareTo(SWAlignment o) {
+        return Float.compare(this.getScore(), o.getScore());
     }
 }
