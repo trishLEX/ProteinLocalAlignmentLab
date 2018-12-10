@@ -9,9 +9,13 @@ import ru.bmstu.bioinf.threading.LocalAligner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         Arguments arguments = ArgumentParser.parse(args);
 
         FineTable.getInstance(arguments.getGap());
@@ -22,7 +26,10 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
-        List<Thread> threads = new ArrayList<>();
+        List<Future> threads = new ArrayList<>();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        System.out.println(Runtime.getRuntime().availableProcessors());
 
         while (dataSetSequenceReader.hasNext()) {
             Sequence dataSetSequence = dataSetSequenceReader.next();
@@ -37,14 +44,15 @@ public class Main {
                     arguments.getRadius()
             );
 
-            Thread thread = new Thread(aligner);
-            thread.start();
-            threads.add(thread);
+            Future future = executorService.submit(aligner);
+            threads.add(future);
         }
 
-        for (Thread thread : threads) {
-            thread.join();
+        for (Future thread : threads) {
+            thread.get();
         }
+
+        executorService.shutdown();
 
         long endTime = System.currentTimeMillis();
 
