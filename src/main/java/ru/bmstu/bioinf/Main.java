@@ -2,17 +2,16 @@ package ru.bmstu.bioinf;
 
 import ru.bmstu.bioinf.cli.ArgumentParser;
 import ru.bmstu.bioinf.cli.Arguments;
-import ru.bmstu.bioinf.filtering.DiagSelection;
-import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
 import ru.bmstu.bioinf.sequence.SequenceReader;
 import ru.bmstu.bioinf.sequence.TopSequences;
-import ru.bmstu.bioinf.sw.SWAlignment;
+import ru.bmstu.bioinf.threading.LocalAligner;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Arguments arguments = ArgumentParser.parse(args);
 
         FineTable.getInstance(arguments.getGap());
@@ -23,10 +22,13 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
+        List<Thread> threads = new ArrayList<>();
+
         while (dataSetSequenceReader.hasNext()) {
             Sequence dataSetSequence = dataSetSequenceReader.next();
 
-            DiagSelection selection = new DiagSelection(
+            LocalAligner aligner = new LocalAligner(
+                    tops,
                     arguments.getSearchedSequence(),
                     dataSetSequence,
                     arguments.getGap(),
@@ -35,21 +37,13 @@ public class Main {
                     arguments.getRadius()
             );
 
-            Map<Node, Node> diagonals = selection.getDiagonals();
-            if (diagonals == null) {
-                continue;
-            }
+            Thread thread = new Thread(aligner);
+            thread.start();
+            threads.add(thread);
+        }
 
-            for (Map.Entry<Node, Node> entry : diagonals.entrySet()) {
-                SWAlignment alignment = new SWAlignment(
-                        arguments.getSearchedSequence(),
-                        dataSetSequence,
-                        entry.getKey(),
-                        entry.getValue(),
-                        FineTable.getInstance()
-                );
-                tops.add(alignment);
-            }
+        for (Thread thread : threads) {
+            thread.join();
         }
 
         long endTime = System.currentTimeMillis();

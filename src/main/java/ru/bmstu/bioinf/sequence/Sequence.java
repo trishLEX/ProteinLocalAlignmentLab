@@ -46,7 +46,7 @@ public class Sequence implements Serializable {
         return name;
     }
 
-    public Map<String, List<Integer>> getBiGrams() {
+    public synchronized Map<String, List<Integer>> getBiGrams() {
         if (biGrams == null) {
             biGrams = new LinkedHashMap<>();
             for (int i = 0; i < sequence.length() - 1; i++) {

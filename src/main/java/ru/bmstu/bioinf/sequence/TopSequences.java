@@ -2,6 +2,8 @@ package ru.bmstu.bioinf.sequence;
 
 import ru.bmstu.bioinf.sw.SWAlignment;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 /**
@@ -9,22 +11,36 @@ import java.util.TreeSet;
  */
 public class TopSequences {
     private int size;
-    private TreeSet<SWAlignment> alignments;
+    private List<SWAlignment> alignments;
     private boolean printAlignments;
 
     public TopSequences(int size, boolean printAlignments) {
         this.size = size;
-        this.alignments = new TreeSet<>();
+        this.alignments = new ArrayList<>(size);
         this.printAlignments = printAlignments;
     }
 
-    public void add(SWAlignment alignment) {
-        if (alignments.size() < size) {
+    public synchronized void add(SWAlignment alignment) {
+        if (alignments.isEmpty()) {
+            alignments.add(alignment);
+        } else if (alignments.size() < size) {
+
+            for (int i = 0; i < alignments.size(); i++) {
+                if (alignments.get(i).getScore() <= alignment.getScore()) {
+                    alignments.add(i, alignment);
+                    return;
+                }
+            }
+
             alignments.add(alignment);
         } else {
-            if (alignments.first().getScore() < alignment.getScore()) {
-                alignments.remove(alignments.first());
-                alignments.add(alignment);
+
+            for (int i = 0; i < alignments.size(); i++) {
+                if (alignments.get(i).getScore() <= alignment.getScore()) {
+                    alignments.add(i, alignment);
+                    alignments.remove(size);
+                    return;
+                }
             }
         }
     }

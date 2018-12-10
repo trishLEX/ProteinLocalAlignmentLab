@@ -38,8 +38,8 @@ public class DiagSelection {
     /**
      * @return отображение начала пути в его конец
      */
-    public Map<Node, Node> getDiagonals() {
-        List<Set<Node>> diagNGrams = getDiagNGrams();
+    public Map<Node, Node> getDiagonals(List<Set<Node>> nGrams) {
+        List<Set<Node>> diagNGrams = getDiagNGrams(nGrams);
         if (diagNGrams.isEmpty()) {
             return null;
         }
@@ -169,9 +169,7 @@ public class DiagSelection {
         }
     }
 
-    private List<Set<Node>> getDiagNGrams() {
-        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
-
+    private List<Set<Node>> getDiagNGrams(List<Set<Node>> nGrams) {
         List<Set<Node>> filtered = new ArrayList<>(10);
 
         for(Set<Node> set : nGrams) {

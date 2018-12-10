@@ -3,9 +3,12 @@ package ru.bmstu.bioinf.filtering;
 import org.junit.Before;
 import org.junit.Test;
 import ru.bmstu.bioinf.FineTable;
+import ru.bmstu.bioinf.bigram.BiGramSelector;
 import ru.bmstu.bioinf.sequence.Sequence;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -25,7 +28,9 @@ public class DiagSelectionTest {
         Sequence dataSetSeq = new Sequence(NAME_2, "CBCCB");
 
         DiagSelection diagSelection = new DiagSelection(searchedSeq, dataSetSeq, -2,0, 0, 5);
-        Map<Node, Node> words = diagSelection.getDiagonals();
+        BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
+        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
         assertEquals(1, words.size());
     }
 
@@ -35,7 +40,9 @@ public class DiagSelectionTest {
         Sequence dataSetSeq = new Sequence(NAME_2, "CBCBB");
 
         DiagSelection diagSelection = new DiagSelection(searchedSeq, dataSetSeq, -2, 0, 0, 5);
-        Map<Node, Node> words = diagSelection.getDiagonals();
+        BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
+        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
         assertEquals(1, words.size());
     }
 
@@ -45,7 +52,9 @@ public class DiagSelectionTest {
         Sequence dataSetSeq = new Sequence(NAME_2, "CBCBB");
 
         DiagSelection diagSelection = new DiagSelection(searchedSeq, dataSetSeq, -2, 0, 0, 2);
-        Map<Node, Node> words = diagSelection.getDiagonals();
+        BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
+        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
         assertEquals(1, words.size());
     }
 
@@ -55,7 +64,9 @@ public class DiagSelectionTest {
         Sequence dataSetSeq = new Sequence(NAME_2, "CBCBB");
 
         DiagSelection diagSelection = new DiagSelection(searchedSeq, dataSetSeq, -2, 0, 0, 2);
-        Map<Node, Node> words = diagSelection.getDiagonals();
+        BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
+        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
         assertEquals(2, words.size());
     }
 }
