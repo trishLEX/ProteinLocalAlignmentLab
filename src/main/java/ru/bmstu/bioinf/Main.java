@@ -8,13 +8,10 @@ import ru.bmstu.bioinf.sequence.TopSequences;
 import ru.bmstu.bioinf.threading.LocalAligner;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
+    public static void main(String[] args) throws InterruptedException {
         Arguments arguments = ArgumentParser.parse(args);
 
         FineTable.getInstance(arguments.getGap());
@@ -25,21 +22,15 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
-        Set<Future> threads = new HashSet<>();
-
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        int counter = 0;
+        ExecutorService executorService =
+                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        CompletionService<Void> completionService = new ExecutorCompletionService<>(executorService);
         int maxThreads = Runtime.getRuntime().availableProcessors();
-
         while (dataSetSequenceReader.hasNext()) {
-            if(threads.size() == maxThreads) {
-                Iterator<Future> it = threads.iterator();
-                while(it.hasNext()) {
-                    Future t = it.next();
-                    if(t.isDone()){
-                        t.get();
-                        it.remove();
-                    }
-                }
+            if(counter == maxThreads) {
+                completionService.take();
+                --counter;
             } else {
                 Sequence dataSetSequence = dataSetSequenceReader.next();
 
@@ -53,14 +44,16 @@ public class Main {
                         arguments.getRadius()
                 );
 
-                Future future = executorService.submit(aligner);
-                threads.add(future);
+                Future future = completionService.submit(aligner, null);
+                ++counter;
             }
         }
 
-        for (Future thread : threads) {
-            thread.get();
+        while(counter > 0) {
+            completionService.take();
+            --counter;
         }
+
 
         executorService.shutdown();
 

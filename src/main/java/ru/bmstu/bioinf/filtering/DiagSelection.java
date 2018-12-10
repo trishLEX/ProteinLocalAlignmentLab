@@ -170,19 +170,22 @@ public class DiagSelection {
     }
 
     private List<Set<Node>> getDiagNGrams(List<Set<Node>> nGrams) {
-        List<Set<Node>> filtered = new ArrayList<>(10);
+        List<Set<Node>> filtered = new ArrayList<>();
 
         for(Set<Node> set : nGrams) {
-            if (set.size() > minBiGrams * 2 && getDiagScore(set) > diagScore) {
+            if (set.size() > minBiGrams * 2) {
                 filtered.add(set);
-
-                if (filtered.size() == 10) {
-                    break;
-                }
             }
         }
 
-        return filtered;
+        filtered.sort((Comparator<Set<?>>) (o1, o2) -> o2.size() - o1.size());
+        List<Set<Node>> res = new ArrayList<>(10);
+        for(Set<Node> set : filtered) {
+            if(getDiagScore(set) > diagScore) {
+                res.add(set);
+            }
+        }
+        return res;
     }
 
     private int getDiagScore(Set<Node> nodes) {
