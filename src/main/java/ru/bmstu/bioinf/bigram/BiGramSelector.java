@@ -22,8 +22,8 @@ public class BiGramSelector {
     }
 
     /**
-     * Выделяет набор ngram, используя итераторы
-     * @return набор ngram для заданной searchedSequence
+     * Выделяет набор bigram, используя итераторы
+     * @return набор bigram для заданной searchedSequence
      */
     public List<BiGram> getNewNGramsByIterator() {
          List<BiGram> biGrams = new ArrayList<>();
@@ -80,7 +80,7 @@ public class BiGramSelector {
      * Сопоставляет n-грамму из searched и n-граммы из data
      * В случае успеха, возвращает список объектов класса BiGram
      * Если searched или data последовательность закончена, возвращает пустой список
-     * @return список ngram или пустой список
+     * @return список bigram или пустой список
      */
     private List<BiGram> getNewNGram(BiGramIterator.NGramStruct searchedNGramSeq) {
         dataSetIter.setPos(0); // Для новой ngramm начинаем поиск с нуля

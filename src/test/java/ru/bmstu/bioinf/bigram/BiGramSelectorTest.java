@@ -1,10 +1,7 @@
-package ru.bmstu.bioinf.ngram;
+package ru.bmstu.bioinf.bigram;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import ru.bmstu.bioinf.bigram.BiGram;
-import ru.bmstu.bioinf.bigram.BiGramSelector;
 import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
 
@@ -52,24 +49,8 @@ public class BiGramSelectorTest {
         Sequence dataSeq = new Sequence("data", "AGAG");
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSeq);
         List<BiGram> result = biGramSelector.getNewNGrams();
-        Assert.assertEquals(2, result.size());
-        Assert.assertEquals("AGA", result.get(0).getString());
-        Assert.assertEquals("GAG", result.get(1).getString());
-    }
-
-    @Test
-    public void test5() {
-        Sequence searchedSeq = new Sequence("searched", "AGAG");
-        Sequence dataSeq = new Sequence("data", "AGAGTTTTTTAGA");
-        BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSeq);
-        List<BiGram> result = biGramSelector.getNewNGrams();
-        Assert.assertEquals(3, result.size());
-        Assert.assertEquals("AGA", result.get(0).getString());
-        Assert.assertEquals(0, result.get(0).getDataSetSeqCoordinate());
-        Assert.assertEquals("AGA", result.get(1).getString());
-        Assert.assertEquals(10, result.get(1).getDataSetSeqCoordinate());
-        Assert.assertEquals("GAG", result.get(2).getString());
-        Assert.assertEquals(1, result.get(2).getDataSetSeqCoordinate());
+        Assert.assertEquals(5, result.size());
+        Assert.assertEquals("AG", result.get(1).getString());
     }
 
     /**
