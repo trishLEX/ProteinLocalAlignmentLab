@@ -11,6 +11,9 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class Main {
+    private static final int SIZE = 50;
+    private static final Void PLACEHOLDER = null;
+
     public static void main(String[] args) throws InterruptedException {
         Arguments arguments = ArgumentParser.parse(args);
 
@@ -23,16 +26,19 @@ public class Main {
         long startTime = System.currentTimeMillis();
 
         int counter = 0;
-        ExecutorService executorService =
-                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        CompletionService<Void> completionService = new ExecutorCompletionService<>(executorService);
         int maxThreads = Runtime.getRuntime().availableProcessors();
+        ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
+
+        CompletionService<Void> completionService = new ExecutorCompletionService<>(executorService);
+
+        arguments.getSearchedSequence().getBiGrams();
+
         while (dataSetSequenceReader.hasNext()) {
             if(counter == maxThreads) {
                 completionService.take();
                 --counter;
             } else {
-                Sequence[] dataSetSequences = dataSetSequenceReader.next(50);
+                List<Sequence> dataSetSequences = dataSetSequenceReader.next(SIZE);
 
                 LocalAligner aligner = new LocalAligner(
                         tops,
@@ -44,9 +50,7 @@ public class Main {
                         arguments.getRadius()
                 );
 
-//                aligner.run();
-
-                completionService.submit(aligner, null);
+                completionService.submit(aligner, PLACEHOLDER);
                 ++counter;
             }
         }
@@ -55,7 +59,6 @@ public class Main {
             completionService.take();
             --counter;
         }
-
 
         executorService.shutdown();
 

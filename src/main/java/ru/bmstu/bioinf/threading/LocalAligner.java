@@ -15,13 +15,13 @@ import java.util.Set;
 public class LocalAligner implements Runnable {
     private TopSequences top;
     private Sequence searchedSequence;
-    private Sequence[] dataSetSequences;
+    private List<Sequence> dataSetSequences;
     private float gap;
     private float diagScore;
     private int minBiGrams;
     private int radius;
 
-    public LocalAligner(TopSequences top, Sequence searchedSequence, Sequence[] dataSetSequences, float gap, float diagScore, int minBiGrams, int radius) {
+    public LocalAligner(TopSequences top, Sequence searchedSequence, List<Sequence> dataSetSequences, float gap, float diagScore, int minBiGrams, int radius) {
         this.top = top;
         this.searchedSequence = searchedSequence;
         this.dataSetSequences = dataSetSequences;
@@ -33,18 +33,17 @@ public class LocalAligner implements Runnable {
 
     @Override
     public void run() {
-        for (int i = 0; i < dataSetSequences.length; i++) {
-            if(dataSetSequences[i] == null) break;
+        for (Sequence dataSetSequence : dataSetSequences) {
             DiagSelection selection = new DiagSelection(
                     searchedSequence,
-                    dataSetSequences[i],
+                    dataSetSequence,
                     gap,
                     diagScore,
                     minBiGrams,
                     radius
             );
 
-            BiGramSelector biGramSelector = new BiGramSelector(searchedSequence, dataSetSequences[i]);
+            BiGramSelector biGramSelector = new BiGramSelector(searchedSequence, dataSetSequence);
             List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
             Map<Node, Node> diagonals = selection.getDiagonals(nGrams);
 
@@ -52,7 +51,7 @@ public class LocalAligner implements Runnable {
                 for (Map.Entry<Node, Node> entry : diagonals.entrySet()) {
                     SWAlignment alignment = new SWAlignment(
                             searchedSequence,
-                            dataSetSequences[i],
+                            dataSetSequence,
                             entry.getKey(),
                             entry.getValue(),
                             FineTable.getInstance()

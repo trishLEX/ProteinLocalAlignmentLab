@@ -24,7 +24,6 @@ public class TopSequences {
         if (alignments.isEmpty()) {
             alignments.add(alignment);
         } else if (alignments.size() < size) {
-
             for (int i = 0; i < alignments.size(); i++) {
                 if (alignments.get(i).getScore() <= alignment.getScore()) {
                     alignments.add(i, alignment);
@@ -34,7 +33,6 @@ public class TopSequences {
 
             alignments.add(alignment);
         } else {
-
             for (int i = 0; i < alignments.size(); i++) {
                 if (alignments.get(i).getScore() <= alignment.getScore()) {
                     alignments.add(i, alignment);

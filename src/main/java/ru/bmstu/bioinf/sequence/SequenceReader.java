@@ -57,15 +57,16 @@ public class SequenceReader implements Iterator<Sequence> {
         }
     }
 
-    public Sequence[] next(int number) {
-        Sequence[] res = new Sequence[number];
-        for (int i = 0; i < number; i++) {
+    public List<Sequence> next(int size) {
+        List<Sequence> res = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
             if (hasNext()) {
-                res[i] = next();
+                res.add(next());
             } else {
                 return res;
             }
         }
+
         return res;
     }
 
