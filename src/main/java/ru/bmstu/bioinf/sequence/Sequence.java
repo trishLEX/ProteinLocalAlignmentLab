@@ -12,12 +12,6 @@ public class Sequence implements Serializable {
     private Map<String, List<Integer>> biGrams;
 
     public Sequence(String name, String sequence) {
-        for (char c : sequence.toCharArray()) {
-            if (!Character.isLetter(c)) {
-                throw new IllegalArgumentException("Not letter in sequence: " + c);
-            }
-        }
-
         this.name = name;
         this.sequence = sequence;
     }
@@ -48,7 +42,7 @@ public class Sequence implements Serializable {
 
     public Map<String, List<Integer>> getBiGrams() {
         if (biGrams == null) {
-            biGrams = new LinkedHashMap<>();
+            biGrams = new HashMap<>();
             for (int i = 0; i < sequence.length() - 1; i++) {
                 String biGram = sequence.substring(i, i + 2);
                 if (biGrams.containsKey(biGram)) {
