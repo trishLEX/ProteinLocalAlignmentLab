@@ -44,7 +44,9 @@ public class Main {
                         arguments.getRadius()
                 );
 
-                Future future = completionService.submit(aligner, null);
+//                aligner.run();
+
+                completionService.submit(aligner, null);
                 ++counter;
             }
         }

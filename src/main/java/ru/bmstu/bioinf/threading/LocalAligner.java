@@ -35,6 +35,7 @@ public class LocalAligner implements Runnable {
     public void run() {
 
         for (int i = 0; i < dataSetSequences.length; i++) {
+            if(dataSetSequences[i] == null) break;
             DiagSelection selection = new DiagSelection(
                     searchedSequence,
                     dataSetSequences[i],

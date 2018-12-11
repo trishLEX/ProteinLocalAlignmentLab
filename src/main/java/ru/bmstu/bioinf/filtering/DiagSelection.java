@@ -169,6 +169,49 @@ public class DiagSelection {
         }
     }
 
+//    private List<Set<Node>> getDiagNGrams(List<Set<Node>> nGrams) {
+//        List<Set<Node>> filtered = new ArrayList<>();
+//
+//        for(Set<Node> set : nGrams) {
+//            if (set.size() > minBiGrams * 2) {
+//                filtered.add(set);
+//            }
+//        }
+//
+//        filtered.sort((Comparator<Set<?>>) (o1, o2) -> o2.size() - o1.size());
+//        List<Set<Node>> res = new ArrayList<>(10);
+//        for(Set<Node> set : filtered) {
+//            if(getDiagScore(set) > diagScore) {
+//                res.add(set);
+//            }
+//        }
+//        return res;
+//    }
+//
+//    private int getDiagScore(Set<Node> nodes) {
+//        Node node = nodes.iterator().next();
+//        int searchedStart = node.getSearchedSeqCoordinate();
+//        int dataSetStart = node.getDataSetSeqCoordinate();
+//
+//        int i = searchedStart;
+//        int j = dataSetStart;
+//
+//        int diagScore = 0;
+//        while (i > 0 && j > 0) {
+//            diagScore += fineTable.get(searchedSequence.get(i), dataSetSequence.get(j));
+//            i--;
+//            j--;
+//        }
+//
+//        while (searchedStart < searchedSequence.length() && dataSetStart < dataSetSequence.length()) {
+//            diagScore += fineTable.get(searchedSequence.get(searchedStart), dataSetSequence.get(dataSetStart));
+//            searchedStart++;
+//            dataSetStart++;
+//        }
+//
+//        return diagScore;
+//    }
+
     private List<Set<Node>> getDiagNGrams(List<Set<Node>> nGrams) {
         List<Set<Node>> filtered = new ArrayList<>();
 
@@ -190,23 +233,20 @@ public class DiagSelection {
 
     private int getDiagScore(Set<Node> nodes) {
         Node node = nodes.iterator().next();
-        int searchedStart = node.getSearchedSeqCoordinate();
-        int dataSetStart = node.getDataSetSeqCoordinate();
-
-        int i = searchedStart;
-        int j = dataSetStart;
-
         int diagScore = 0;
-        while (i > 0 && j > 0) {
-            diagScore += fineTable.get(searchedSequence.get(i), dataSetSequence.get(j));
-            i--;
-            j--;
+        int minSearchedIndex, maxSearchedIndex;
+
+        minSearchedIndex = maxSearchedIndex = node.getSearchedSeqCoordinate();
+        for(Node cur : nodes) {
+            minSearchedIndex = Math.min(minSearchedIndex, cur.getSearchedSeqCoordinate());
+            maxSearchedIndex = Math.max(maxSearchedIndex, cur.getSearchedSeqCoordinate());
+
         }
 
-        while (searchedStart < searchedSequence.length() && dataSetStart < dataSetSequence.length()) {
-            diagScore += fineTable.get(searchedSequence.get(searchedStart), dataSetSequence.get(dataSetStart));
-            searchedStart++;
-            dataSetStart++;
+        int until = maxSearchedIndex + 1;
+        int diagonalId = node.getDataSetSeqCoordinate() - node.getSearchedSeqCoordinate();
+        for(int i = minSearchedIndex; i < until; ++i) {
+            diagScore += fineTable.get(searchedSequence.get(i), dataSetSequence.get(diagonalId + i));
         }
 
         return diagScore;
