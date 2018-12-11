@@ -33,7 +33,6 @@ public class LocalAligner implements Runnable {
 
     @Override
     public void run() {
-
         for (int i = 0; i < dataSetSequences.length; i++) {
             if(dataSetSequences[i] == null) break;
             DiagSelection selection = new DiagSelection(
