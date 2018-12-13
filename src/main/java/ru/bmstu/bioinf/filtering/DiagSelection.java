@@ -170,40 +170,32 @@ public class DiagSelection {
     }
 
     private List<Set<Node>> getDiagNGrams(List<Set<Node>> nGrams) {
-        List<Set<Node>> filtered = new ArrayList<>(10);
+        List<Set<Node>> filteredBySize = new ArrayList<>(nGrams.size());
 
-        for(Set<Node> set : nGrams) {
-            if (set.size() > minBiGrams * 2 && getDiagScore(set) > diagScore) {
-                filtered.add(set);
-
-                if (filtered.size() == 10) {
-                    break;
-                }
+        for (Set<Node> diag : nGrams) {
+            if (diag.size() > minBiGrams * 2) {
+                filteredBySize.add(diag);
             }
         }
 
-        return filtered;
-    }
+        filteredBySize.sort(Comparator.comparingInt(Set::size));
 
-    private int getDiagScore(Set<Node> nodes) {
-        Node node = nodes.iterator().next();
-        int searchedStart = node.getSearchedSeqCoordinate();
-        int dataSetStart = node.getDataSetSeqCoordinate();
+        List<Set<Node>> filteredByScore = new ArrayList<>();
 
-        int i = searchedStart;
-        int j = dataSetStart;
-
-        int diagScore = 0;
-        while (i > 0 && j > 0) {
-            diagScore += fineTable.get(searchedSequence.get(i), dataSetSequence.get(j));
-            i--;
-            j--;
+        for (int i = 0; i < Math.min(10, filteredBySize.size()); i++) {
+            if (getDiagScore(filteredBySize.get(i)) > diagScore) {
+                filteredByScore.add(filteredBySize.get(i));
+            }
         }
 
-        while (searchedStart < searchedSequence.length() && dataSetStart < dataSetSequence.length()) {
-            diagScore += fineTable.get(searchedSequence.get(searchedStart), dataSetSequence.get(dataSetStart));
-            searchedStart++;
-            dataSetStart++;
+        return filteredByScore;
+    }
+
+    private float getDiagScore(Set<Node> nodes) {
+        float diagScore = 0f;
+
+        for (Node node : nodes) {
+            diagScore += fineTable.get(node.getSearchedSeqChar(), node.getDataSetSeqChar());
         }
 
         return diagScore;
