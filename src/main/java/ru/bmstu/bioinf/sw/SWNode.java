@@ -22,10 +22,6 @@ public class SWNode {
         this.action = action;
     }
 
-    public Pair<Integer, Integer> getCoords() {
-        return new Pair<>(searchedSeqCoordinate, dataSetSeqCoordinate);
-    }
-
     public SWNode getParent() {
         return parent;
     }

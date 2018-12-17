@@ -2,54 +2,65 @@ package ru.bmstu.bioinf;
 
 import ru.bmstu.bioinf.cli.ArgumentParser;
 import ru.bmstu.bioinf.cli.Arguments;
-import ru.bmstu.bioinf.filtering.DiagSelection;
-import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
 import ru.bmstu.bioinf.sequence.SequenceReader;
-import ru.bmstu.bioinf.sw.SWAlignment;
+import ru.bmstu.bioinf.sequence.TopSequences;
+import ru.bmstu.bioinf.threading.LocalAligner;
 
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) {
+    private static final int SIZE = 50;
+    private static final Void PLACEHOLDER = null;
+
+    public static void main(String[] args) throws InterruptedException {
         Arguments arguments = ArgumentParser.parse(args);
 
         FineTable.getInstance(arguments.getGap());
 
-        TopSequences tops = new TopSequences(arguments.getTopSize(), arguments.isPrintAlignment());
+        TopSequences tops = new TopSequences(arguments.isPrintAlignment());
 
         SequenceReader dataSetSequenceReader = arguments.getDataSetSequenceReader();
 
         long startTime = System.currentTimeMillis();
 
+        int counter = 0;
+        int maxThreads = Runtime.getRuntime().availableProcessors();
+        ExecutorService executorService = Executors.newFixedThreadPool(maxThreads);
+
+        CompletionService<Void> completionService = new ExecutorCompletionService<>(executorService);
+
+        arguments.getSearchedSequence().getBiGrams();
+
         while (dataSetSequenceReader.hasNext()) {
-            Sequence dataSetSequence = dataSetSequenceReader.next();
+            if(counter == maxThreads) {
+                completionService.take();
+                --counter;
+            } else {
+                List<Sequence> dataSetSequences = dataSetSequenceReader.next(SIZE);
 
-            DiagSelection selection = new DiagSelection(
-                    arguments.getSearchedSequence(),
-                    dataSetSequence,
-                    arguments.getGap(),
-                    arguments.getDiagScore(),
-                    arguments.getBiGramCount(),
-                    arguments.getRadius()
-            );
-
-            Map<Node, Node> diagonals = selection.getDiagonals();
-            if (diagonals == null) {
-                continue;
-            }
-
-            for (Map.Entry<Node, Node> entry : diagonals.entrySet()) {
-                SWAlignment alignment = new SWAlignment(
+                LocalAligner aligner = new LocalAligner(
+                        tops,
                         arguments.getSearchedSequence(),
-                        dataSetSequence,
-                        entry.getKey(),
-                        entry.getValue(),
-                        FineTable.getInstance()
+                        dataSetSequences,
+                        arguments.getGap(),
+                        arguments.getDiagScore(),
+                        arguments.getBiGramCount(),
+                        arguments.getRadius()
                 );
-                tops.add(alignment);
+
+                completionService.submit(aligner, PLACEHOLDER);
+                ++counter;
             }
         }
+
+        while(counter > 0) {
+            completionService.take();
+            --counter;
+        }
+
+        executorService.shutdown();
 
         long endTime = System.currentTimeMillis();
 

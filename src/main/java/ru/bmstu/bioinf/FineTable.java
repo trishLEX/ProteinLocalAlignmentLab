@@ -3,6 +3,9 @@ package ru.bmstu.bioinf;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Blosum62
+ */
 public class FineTable {
     public static final Character GAP = '-';
 

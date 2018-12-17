@@ -17,7 +17,7 @@ public class BiGramSelector {
         this.dataSetSequence = dataSetSequence;
     }
 
-    public List<Set<Node>> getNewNGramsByHash() {
+    public List<Set<Node>> getNewBiGrams() {
         Map<String, List<Integer>> searchedBiGrams = searchedSequence.getBiGrams();
         Map<String, List<Integer>> dataSetBiGrams = dataSetSequence.getBiGrams();
 

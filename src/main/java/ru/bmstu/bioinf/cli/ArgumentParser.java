@@ -27,11 +27,10 @@ public class ArgumentParser {
             int radius = cmd.hasOption("r") ? Integer.parseInt(cmd.getOptionValue("r")) : RADIUS_DEFAULT;
             String searchedFile = cmd.getOptionValue("s");
             String dataSetFile = cmd.getOptionValue("d");
-            int topSize = cmd.hasOption("t") ? Integer.parseInt(cmd.getOptionValue("t")) : TOP_SIZE;
             boolean printAlignment = cmd.hasOption("p");
 
 
-            return new Arguments(gap, diagScore, nGramsCount, radius, searchedFile, dataSetFile, printAlignment, topSize);
+            return new Arguments(gap, diagScore, nGramsCount, radius, searchedFile, dataSetFile, printAlignment);
         } catch (ParseException e) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("cli", options);
@@ -45,10 +44,6 @@ public class ArgumentParser {
         Option gapOption = new Option("g", "gap", true, "gap error, default is -2");
         gapOption.setRequired(false);
         options.addOption(gapOption);
-
-        Option nGramLenOption = new Option("l", "len", true, "nGram length, default is 2");
-        nGramLenOption.setRequired(false);
-        options.addOption(nGramLenOption);
 
         Option diagScoreOption = new Option("D", "diag", true, "diagonal min score, default is 60");
         diagScoreOption.setRequired(false);
@@ -69,10 +64,6 @@ public class ArgumentParser {
         Option dataSetFileOption = new Option("d", "dataset", true, "path to file with sequence data set");
         dataSetFileOption.setRequired(true);
         options.addOption(dataSetFileOption);
-
-        Option topNumberOption = new Option("t", "top", true, "number of printed fastas, default is 5");
-        topNumberOption.setRequired(false);
-        options.addOption(topNumberOption);
 
         Option printAlignmentOption = new Option("p", "print-alignment", false, "print alignment");
         printAlignmentOption.setRequired(false);

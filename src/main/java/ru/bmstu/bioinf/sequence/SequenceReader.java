@@ -57,6 +57,19 @@ public class SequenceReader implements Iterator<Sequence> {
         }
     }
 
+    public List<Sequence> next(int size) {
+        List<Sequence> res = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            if (hasNext()) {
+                res.add(next());
+            } else {
+                return res;
+            }
+        }
+
+        return res;
+    }
+
     private Sequence getNext() {
         LinkedList<String> lines = new LinkedList<>();
         String name = lastName;
