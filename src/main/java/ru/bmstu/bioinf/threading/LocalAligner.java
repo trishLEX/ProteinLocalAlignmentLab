@@ -42,7 +42,7 @@ public class LocalAligner implements Runnable {
             );
 
             BiGramSelector biGramSelector = new BiGramSelector(searchedSequence, dataSetSequence);
-            List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+            List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
             Map<Node, Node> diagonals = selection.getDiagonals(nGrams);
 
             if (diagonals != null) {

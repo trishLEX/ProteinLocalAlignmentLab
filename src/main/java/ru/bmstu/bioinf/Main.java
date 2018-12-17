@@ -19,7 +19,7 @@ public class Main {
 
         FineTable.getInstance(arguments.getGap());
 
-        TopSequences tops = new TopSequences(arguments.getTopSize(), arguments.isPrintAlignment());
+        TopSequences tops = new TopSequences(arguments.isPrintAlignment());
 
         SequenceReader dataSetSequenceReader = arguments.getDataSetSequenceReader();
 

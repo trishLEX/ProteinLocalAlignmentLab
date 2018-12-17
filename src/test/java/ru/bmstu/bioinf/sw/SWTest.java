@@ -28,7 +28,7 @@ public class SWTest {
 
         DiagSelection diagSelection = new DiagSelection(-2, 0, 0, 5);
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
-        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
 
         for(Map.Entry<Node, Node> e : words.entrySet()) {
@@ -46,7 +46,7 @@ public class SWTest {
 
         DiagSelection diagSelection = new DiagSelection(-2, 0, 0, 5);
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
-        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
 
         for(Map.Entry<Node, Node> e : words.entrySet()) {

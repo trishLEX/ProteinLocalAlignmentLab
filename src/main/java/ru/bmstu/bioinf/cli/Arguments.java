@@ -11,13 +11,12 @@ public class Arguments {
     private Sequence searchedSequence;
     private SequenceReader dataSetSequenceReader;
     private boolean printAlignment;
-    private int topSize;
 
     /**
      * Фабричный метод находится в {@link ArgumentParser#parse}
      */
     Arguments(float gap, float diagScore, int biGramCount,
-            int radius, String searchedFile, String dataFile, boolean printAlignment, int topSize)
+            int radius, String searchedFile, String dataFile, boolean printAlignment)
     {
         this.gap = gap;
         this.diagScore = diagScore;
@@ -26,7 +25,6 @@ public class Arguments {
         this.searchedSequence = new SequenceReader(searchedFile).next();
         this.dataSetSequenceReader = new SequenceReader(dataFile);
         this.printAlignment = printAlignment;
-        this.topSize = topSize;
     }
 
     public float getGap() {
@@ -55,9 +53,5 @@ public class Arguments {
 
     public boolean isPrintAlignment() {
         return printAlignment;
-    }
-
-    public int getTopSize() {
-        return topSize;
     }
 }

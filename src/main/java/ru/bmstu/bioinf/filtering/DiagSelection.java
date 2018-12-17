@@ -1,12 +1,8 @@
 package ru.bmstu.bioinf.filtering;
 
 import ru.bmstu.bioinf.FineTable;
-import ru.bmstu.bioinf.bigram.BiGramSelector;
-import ru.bmstu.bioinf.sequence.Sequence;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * Класс для получения максимальных путей по дот-мапе
  */
@@ -32,7 +28,7 @@ public class DiagSelection {
      * @return отображение начала пути в его конец
      */
     public Map<Node, Node> getDiagonals(List<Set<Node>> nGrams) {
-        List<Set<Node>> diagNGrams = getDiagNGrams(nGrams);
+        List<Set<Node>> diagNGrams = getDiagBiGrams(nGrams);
         if (diagNGrams.isEmpty()) {
             return null;
         }
@@ -40,6 +36,9 @@ public class DiagSelection {
         return getMaxRoutes(diagNGrams);
     }
 
+    /**
+     * Построить максимальный маршрут от {@param node}
+     */
     private void buildRoutes(Node node) {
         if (!node.hasChildren()) {
             endNodes.add(node);
@@ -70,6 +69,9 @@ public class DiagSelection {
         }
     }
 
+    /**
+     * Сортировка по нод внутри диагонали и их соединение внутри диагонали
+     */
     private List<List<Node>> sortAndLinkDiags(List<Set<Node>> diags) {
         List<List<Node>> result = new ArrayList<>(diags.size());
 
@@ -96,6 +98,9 @@ public class DiagSelection {
         return result;
     }
 
+    /**
+     * Построить все максимальные маршруты для каждой компоненты связности
+     */
     private Map<Node, Node> getMaxRoutes(List<Set<Node>> diags) {
         List<List<Node>> sortedAndLinkedDiags = sortAndLinkDiags(diags);
         linkNodes(sortedAndLinkedDiags);
@@ -128,6 +133,9 @@ public class DiagSelection {
         return startToEndMap;
     }
 
+    /**
+     * Соединение всех возможных нод
+     */
     private void linkNodes(List<List<Node>> diags) {
         for (int i = 0; i < diags.size() - 1; i++) {
             for (int j = i + 1; j < diags.size(); j++) {
@@ -164,10 +172,13 @@ public class DiagSelection {
         }
     }
 
-    private List<Set<Node>> getDiagNGrams(List<Set<Node>> nGrams) {
-        List<Set<Node>> filteredBySize = new ArrayList<>(nGrams.size());
+    /**
+     * Фильтарция диагоналей
+     */
+    private List<Set<Node>> getDiagBiGrams(List<Set<Node>> biGrams) {
+        List<Set<Node>> filteredBySize = new ArrayList<>(biGrams.size());
 
-        for (Set<Node> diag : nGrams) {
+        for (Set<Node> diag : biGrams) {
             if (diag.size() > minBiGrams * 2) {
                 filteredBySize.add(diag);
             }

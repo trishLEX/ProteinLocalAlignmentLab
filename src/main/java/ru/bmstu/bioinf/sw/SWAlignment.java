@@ -200,6 +200,6 @@ public class SWAlignment implements Comparable<SWAlignment> {
 
     @Override
     public int compareTo(SWAlignment o) {
-        return -1 * Float.compare(this.getScore(), o.getScore());
+        return -Float.compare(this.getScore(), o.getScore());
     }
 }

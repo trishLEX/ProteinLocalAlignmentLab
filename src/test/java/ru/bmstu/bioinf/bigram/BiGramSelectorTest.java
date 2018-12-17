@@ -1,6 +1,5 @@
 package ru.bmstu.bioinf.bigram;
 
-import org.junit.Assert;
 import org.junit.Test;
 import ru.bmstu.bioinf.filtering.Node;
 import ru.bmstu.bioinf.sequence.Sequence;
@@ -14,7 +13,7 @@ public class BiGramSelectorTest {
         Sequence searchedSeq = new Sequence("searched", "AGACGTAAGA");
         Sequence dataSeq = new Sequence("data", "AGGGGGGGGGGGGGGGGGGG");
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSeq);
-        List<Set<Node>> result = biGramSelector.getNewNGramsByHash();
+        List<Set<Node>> result = biGramSelector.getNewBiGrams();
         System.out.println(result);
     }
 
@@ -23,7 +22,7 @@ public class BiGramSelectorTest {
         Sequence searchedSeq = new Sequence("searched", "AABA");
         Sequence dataSeq = new Sequence("data", "ABAA");
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSeq);
-        List<Set<Node>> result = biGramSelector.getNewNGramsByHash();
+        List<Set<Node>> result = biGramSelector.getNewBiGrams();
         System.out.println(result);
     }
 }

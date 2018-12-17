@@ -11,43 +11,20 @@ import java.util.TreeSet;
  * Хранит топ size последовательностей, самая похожая под индексом 0 в {@link TopSequences#alignments}
  */
 public class TopSequences {
-    private int size;
     private List<SWAlignment> alignments;
     private boolean printAlignments;
 
-    public TopSequences(int size, boolean printAlignments) {
-        this.size = size;
-        this.alignments = new ArrayList<>(size);
+    public TopSequences(boolean printAlignments) {
+        this.alignments = new ArrayList<>();
         this.printAlignments = printAlignments;
     }
 
     public synchronized void add(SWAlignment alignment) {
-//        if (alignments.isEmpty()) {
-//            alignments.add(alignment);
-//        } else if (alignments.size() < size) {
-//            for (int i = 0; i < alignments.size(); i++) {
-//                if (alignments.get(i).getScore() <= alignment.getScore()) {
-//                    alignments.add(i, alignment);
-//                    return;
-//                }
-//            }
-//
-//            alignments.add(alignment);
-//        } else {
-//            for (int i = 0; i < alignments.size(); i++) {
-//                if (alignments.get(i).getScore() <= alignment.getScore()) {
-//                    alignments.add(i, alignment);
-//                    alignments.remove(size);
-//                    return;
-//                }
-//            }
-//        }
         alignments.add(alignment);
     }
 
     @Override
     public String toString() {
-//        alignments.sort(SWAlignment::compareTo);
         Collections.sort(alignments);
         StringBuilder result = new StringBuilder();
         int index = 0;
@@ -63,12 +40,6 @@ public class TopSequences {
                         .append(alignment.toString())
                         .append("\n\n");
             } else {
-//                result
-//                        .append("Score: ")
-//                        .append(alignment.getScore())
-//                        .append(" ")
-//                        .append(alignment.getDataSetSequence().getName())
-//                        .append("\n\n");
                 result
                         .append(String.format("%d %s %.0f\n",
                                 index,
@@ -77,10 +48,6 @@ public class TopSequences {
                         );
             }
         }
-
-    //        if (result.length() != 0) {
-    //            result.deleteCharAt(result.length() - 1).deleteCharAt(result.length() - 1);
-    //        }
 
         return result.toString();
     }

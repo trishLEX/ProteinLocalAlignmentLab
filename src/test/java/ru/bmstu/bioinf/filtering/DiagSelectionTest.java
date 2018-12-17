@@ -29,7 +29,7 @@ public class DiagSelectionTest {
 
         DiagSelection diagSelection = new DiagSelection(-2,0, 0, 5);
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
-        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
         assertEquals(1, words.size());
     }
@@ -41,7 +41,7 @@ public class DiagSelectionTest {
 
         DiagSelection diagSelection = new DiagSelection(-2, 0, 0, 5);
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
-        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
         assertEquals(1, words.size());
     }
@@ -53,7 +53,7 @@ public class DiagSelectionTest {
 
         DiagSelection diagSelection = new DiagSelection(-2, 0, 0, 2);
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
-        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
         assertEquals(1, words.size());
     }
@@ -65,7 +65,7 @@ public class DiagSelectionTest {
 
         DiagSelection diagSelection = new DiagSelection(-2, 0, 0, 2);
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
-        List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
+        List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
         assertEquals(2, words.size());
     }
