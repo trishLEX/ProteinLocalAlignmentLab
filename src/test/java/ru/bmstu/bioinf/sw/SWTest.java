@@ -26,7 +26,7 @@ public class SWTest {
         Sequence searchedSeq = new Sequence(NAME_1, "ABCBCC");
         Sequence dataSetSeq = new Sequence(NAME_2, "CBCCB");
 
-        DiagSelection diagSelection = new DiagSelection(searchedSeq, dataSetSeq, -2, 0, 0, 5);
+        DiagSelection diagSelection = new DiagSelection(-2, 0, 0, 5);
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
         List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
@@ -44,7 +44,7 @@ public class SWTest {
         Sequence searchedSeq = new Sequence(NAME_1, "GGAGTGAGGGGAGCAGTTGGCTGAAGATGGTCCCCGCCGAGGGACCGGTGGGCGACGGCG");
         Sequence dataSetSeq = new Sequence(NAME_2, "CGCATGCGGAGTGAGGGGAGCAGTTGGGAACAGATGGTCCCCGCCGAGGGACCGGTGGGC");
 
-        DiagSelection diagSelection = new DiagSelection(searchedSeq, dataSetSeq, -2, 0, 0, 5);
+        DiagSelection diagSelection = new DiagSelection(-2, 0, 0, 5);
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
         List<Set<Node>> nGrams = biGramSelector.getNewNGramsByHash();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);

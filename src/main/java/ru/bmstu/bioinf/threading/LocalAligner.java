@@ -35,8 +35,6 @@ public class LocalAligner implements Runnable {
     public void run() {
         for (Sequence dataSetSequence : dataSetSequences) {
             DiagSelection selection = new DiagSelection(
-                    searchedSequence,
-                    dataSetSequence,
                     gap,
                     diagScore,
                     minBiGrams,

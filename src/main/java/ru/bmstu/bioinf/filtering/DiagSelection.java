@@ -11,9 +11,6 @@ import java.util.stream.Collectors;
  * Класс для получения максимальных путей по дот-мапе
  */
 public class DiagSelection {
-    private BiGramSelector biGramSelector;
-    private Sequence searchedSequence;
-    private Sequence dataSetSequence;
     private FineTable fineTable;
     private List<Node> endNodes;
     private float gap;
@@ -21,11 +18,7 @@ public class DiagSelection {
     private int minBiGrams;
     private int radius;
 
-    public DiagSelection(Sequence searchedSequence, Sequence dataSetSequence, float gap, float diagScore, int minBiGrams, int radius) {
-        this.biGramSelector = new BiGramSelector(searchedSequence, dataSetSequence);
-
-        this.searchedSequence = searchedSequence;
-        this.dataSetSequence = dataSetSequence;
+    public DiagSelection(float gap, float diagScore, int minBiGrams, int radius) {
         this.gap = gap;
         this.diagScore = diagScore;
         this.minBiGrams = minBiGrams;
@@ -155,11 +148,13 @@ public class DiagSelection {
 
                         int diffSearchedSeqCoordinates = toLink.getSearchedSeqCoordinate() - current.getSearchedSeqCoordinate();
                         int diffDataSetSeqCoordinates = toLink.getDataSetSeqCoordinate() - current.getDataSetSeqCoordinate();
+                        float score = fineTable.get(current.getDataSetSeqChar(), toLink.getDataSetSeqChar());
                         if (
+                                score + (diffSearchedSeqCoordinates + diffDataSetSeqCoordinates) * gap >= score &&
                                 diffSearchedSeqCoordinates >= 0 &&
-                                        diffDataSetSeqCoordinates >= 0 &&
-                                        diffSearchedSeqCoordinates + diffDataSetSeqCoordinates <= radius
-                                ) {
+                                diffDataSetSeqCoordinates >= 0 &&
+                                diffSearchedSeqCoordinates + diffDataSetSeqCoordinates <= radius
+                        ) {
                             current.addChild(toLink);
                             toLink.addParent(current);
                         }
