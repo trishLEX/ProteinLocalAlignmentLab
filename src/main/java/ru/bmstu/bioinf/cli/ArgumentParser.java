@@ -46,10 +46,6 @@ public class ArgumentParser {
         gapOption.setRequired(false);
         options.addOption(gapOption);
 
-        Option nGramLenOption = new Option("l", "len", true, "nGram length, default is 2");
-        nGramLenOption.setRequired(false);
-        options.addOption(nGramLenOption);
-
         Option diagScoreOption = new Option("D", "diag", true, "diagonal min score, default is 60");
         diagScoreOption.setRequired(false);
         options.addOption(diagScoreOption);
