@@ -55,7 +55,7 @@ public class TopSequences {
             ++index;
             if (printAlignments) {
                 result
-                        .append(String.format("%6d | %s | %10.1f\n",
+                        .append(String.format("%d %s %.0f\n",
                                 index,
                                 alignment.getDataSetSequence().getId(),
                                 alignment.getScore())
@@ -70,7 +70,7 @@ public class TopSequences {
 //                        .append(alignment.getDataSetSequence().getName())
 //                        .append("\n\n");
                 result
-                        .append(String.format("%6d | %s | %10.1f\n",
+                        .append(String.format("%d %s %.0f\n",
                                 index,
                                 alignment.getDataSetSequence().getId(),
                                 alignment.getScore())
