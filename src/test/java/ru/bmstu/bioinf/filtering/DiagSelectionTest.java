@@ -31,7 +31,7 @@ public class DiagSelectionTest {
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
         List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
-        assertEquals(1, words.size());
+        assertEquals(3, words.size());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class DiagSelectionTest {
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
         List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
-        assertEquals(1, words.size());
+        assertEquals(4, words.size());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class DiagSelectionTest {
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
         List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
-        assertEquals(1, words.size());
+        assertEquals(4, words.size());
     }
 
     @Test
@@ -67,6 +67,6 @@ public class DiagSelectionTest {
         BiGramSelector biGramSelector = new BiGramSelector(searchedSeq, dataSetSeq);
         List<Set<Node>> nGrams = biGramSelector.getNewBiGrams();
         Map<Node, Node> words = diagSelection.getDiagonals(nGrams);
-        assertEquals(2, words.size());
+        assertEquals(4, words.size());
     }
 }
