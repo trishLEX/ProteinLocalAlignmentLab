@@ -61,4 +61,12 @@ public class Sequence implements Serializable {
     public String toString() {
         return "name: " + name + "\n" + "sequence: " + sequence;
     }
+
+    public String getId() {
+        int first = name.indexOf("|");
+        if(first == -1) return "";
+        int last = name.indexOf("|", first + 1);
+        if(last == -1) return "";
+        return name.substring(first + 1, last);
+    }
 }
